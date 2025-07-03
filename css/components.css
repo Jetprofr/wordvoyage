@@ -1,0 +1,283 @@
+/* Menu spécialisé pour les modes */
+.specialized-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.mode-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  border: 4px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.mode-card:hover::before {
+  left: 100%;
+}
+
+.mode-card:hover {
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+}
+
+.learn-mode:hover {
+  border-color: #2196F3;
+}
+
+.review-mode:hover {
+  border-color: #4CAF50;
+}
+
+.mode-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.learn-mode .mode-icon {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+}
+
+.mode-card:hover .mode-icon {
+  transform: scale(1.15) rotate(10deg);
+}
+
+.mode-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.feature {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* Panneau de statistiques */
+.stats-panel {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* Interface d'apprentissage */
+.learning-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+  transition: all 0.3s ease;
+}
+
+.number-display {
+  margin-bottom: 2rem;
+}
+
+.arabic-number {
+  font-size: 6rem;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: 1rem;
+}
+
+.thai-number {
+  font-size: 4rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.audio-section {
+  margin: 2rem 0;
+}
+
+.audio-btn {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.audio-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+}
+
+.explanation-section {
+  background: #f8f9fa;
+  padding: 2rem;
+  border-radius: 15px;
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.learning-navigation {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.test-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+}
+
+/* Section de révision rapide */
+.quick-review {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-top: 2rem;
+}
+
+.learned-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.learned-item {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.learned-item:hover {
+  background: #e3f2fd;
+  border-color: #2196F3;
+  transform: translateY(-2px);
+}
+
+.learned-arabic {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.learned-thai {
+  display: block;
+  font-size: 1.2rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+.progress-section {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-bottom: 2rem;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.progress-bar {
+  background: #ddd;
+  border-radius: 10px;
+  height: 1rem;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .specialized-menu {
+    grid-template-columns: 1fr;
+  }
+  
+  .mode-card {
+    padding: 2rem;
+  }
+  
+  .arabic-number {
+    font-size: 4rem;
+  }
+  
+  .thai-number {
+    font-size: 2.5rem;
+  }
+  
+  .learning-navigation {
+    flex-direction: column;
+  }
+}

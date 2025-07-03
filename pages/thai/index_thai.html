@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apprendre le Thaï - Application Interactive</title>
+  <style>
+    /* Reset et base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+
+    /* Thème sombre */
+    body.dark-theme {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: #e0e0e0;
+    }
+
+    /* Le popup reste TOUJOURS blanc, peu importe le thème */
+    #popup {
+      background: white !important;
+      color: #333 !important;
+    }
+
+    #popup h1 {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    #popup p {
+      color: #666 !important;
+    }
+
+    /* Styles du thème sombre pour les autres éléments */
+    body.dark-theme #header {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
+      border-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    body.dark-theme #header h1 {
+      background: linear-gradient(135deg, #4caf50, #81c784);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    body.dark-theme #header p {
+      color: #b0b0b0;
+    }
+
+    body.dark-theme .menu-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    body.dark-theme .menu-card h3 {
+      color: #e0e0e0;
+    }
+
+    body.dark-theme .menu-card p {
+      color: #b0b0b0;
+    }
+
+    body.dark-theme .menu-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #4caf50;
+    }
+
+    /* Popup Overlay */
+    #popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    #popup {
+      background: white;
+      padding: 3rem;
+      border-radius: 25px;
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: popupSlideIn 0.5s ease-out;
+      position: relative;
+      margin: auto;
+    }
+
+    @keyframes popupSlideIn {
+      from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    #popup h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    #popup p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* Container principal */
+    #container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: none;
+    }
+
+    /* Header */
+    #header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin: 0;
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+
+    /* Menu Grid */
+    #menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      max-width: 1000px;
+      margin: 0 auto;
+      gap: 2rem;
+      justify-content: center;
+      place-items: center;
+    }
+
+    .menu-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 25px;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 320px;
+      backdrop-filter: blur(10px);
+    }
+
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .menu-card:hover::before {
+      left: 100%;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      border-color: #4caf50;
+    }
+
+    .menu-card-icon {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+
+    .menu-card:hover .menu-card-icon {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    .menu-card h3 {
+      font-size: 1.6rem;
+      margin: 0 0 0.8rem;
+      color: #333;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+
+    .menu-card:hover h3 {
+      color: #4caf50;
+    }
+
+    .menu-card p {
+      font-size: 1rem;
+      color: #666;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Boutons */
+    button {
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(76, 175, 80, 0.4);
+    }
+
+    /* Bouton de basculement thème */
+    #theme-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+      transition: all 0.3s ease;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-transform: none;
+      letter-spacing: normal;
+      padding: 0;
+    }
+
+    #theme-toggle:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 15px 35px rgba(76, 175, 80, 0.4);
+    }
+
+    body.dark-theme #theme-toggle {
+      background: linear-gradient(135deg, #ffa726, #ff9800);
+      box-shadow: 0 8px 25px rgba(255, 167, 38, 0.3);
+    }
+
+    body.dark-theme #theme-toggle:hover {
+      box-shadow: 0 15px 35px rgba(255, 167, 38, 0.4);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      #menu-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        max-width: 700px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      #popup {
+        padding: 2rem;
+        margin: 1rem;
+        width: calc(100% - 2rem);
+      }
+      
+      #popup h1 {
+        font-size: 2rem;
+      }
+      
+      #header h1 {
+        font-size: 2.5rem;
+      }
+      
+      #menu-grid {
+        grid-template-columns: 1fr;
+        max-width: 350px;
+        gap: 1.5rem;
+      }
+      
+      .menu-card {
+        padding: 2rem;
+        max-width: none;
+      }
+      
+      #container {
+        padding: 1rem;
+      }
+
+      #theme-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 55px;
+        height: 55px;
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #header {
+        padding: 1.5rem;
+      }
+      
+      #header h1 {
+        font-size: 2rem;
+      }
+      
+      .menu-card-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 2.2rem;
+      }
+      
+      button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      #popup {
+        padding: 1.5rem;
+        margin: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Popup de bienvenue -->
+  <div id="popup-overlay">
+    <div id="popup">
+      <h1 style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="font-size: 1em;">Bienvenue !</div>
+        <div style="font-size: 0.8em; font-weight: 500;">ยินดีต้อนรับ !</div>
+      </h1>
+      <p>Découvrez notre application pour apprendre le thaï de manière interactive et amusante. Explorez nos différents modules d'apprentissage !</p>
+      <button onclick="closePopup()">
+        <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem;">COMMENCER L'AVENTURE</div>
+        <div style="font-size: 0.9rem; font-weight: 400; opacity: 0.9;">เริ่มการผจญภัย</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Container principal -->
+  <div id="container">
+    <!-- Header -->
+    <div id="header">
+      <h1>📚 Apprendre le Thaï</h1>
+      <p>เรียนภาษาไทย • Votre plateforme d'apprentissage interactive complète</p>
+    </div>
+
+    <!-- Menu principal -->
+    <div id="menu-grid">
+      <div class="menu-card" onclick="navigateTo('alphabet-menu_thai.html')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">✏️</div>
+          <h3>Alphabet Thaï • อักษรไทย</h3>
+          <p>Maîtrisez l'écriture thaï avec des lettres interactives et des exercices progressifs • เรียนรู้การเขียนไทยทีละตัวอักษร</p>
+        </div>
+      </div>
+
+      <div class="menu-card" onclick="navigateTo('numbers-menu_thai.html')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">🔢</div>
+          <h3>Nombres Thaï • ตัวเลขไทย</h3>
+          <p>Apprenez les nombres de 0 à 10 000 avec des exercices audio et visuels • เรียนตัวเลข ๐-๑๐,๐๐๐</p>
+        </div>
+      </div>
+
+      <div class="menu-card" onclick="comingSoon('Prononciation')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">🗣️</div>
+          <h3>Prononciation • การออกเสียง</h3>
+          <p>Perfectionnez votre prononciation avec des exercices de répétition interactive • ฝึกการออกเสียงแบบโต้ตอบ</p>
+        </div>
+      </div>
+
+      <div class="menu-card" onclick="comingSoon('Vocabulaire')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">📚</div>
+          <h3>Vocabulaire • คำศัพท์</h3>
+          <p>Enrichissez votre vocabulaire thaï par thèmes et situations • เพิ่มคำศัพท์ไทยตามหัวข้อ</p>
+        </div>
+      </div>
+
+      <div class="menu-card" onclick="comingSoon('Phrases Utiles')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">💬</div>
+          <h3>Phrases Essentielles • ประโยคสำคัญ</h3>
+          <p>Découvrez les expressions indispensables pour vos conversations • เรียนรู้การสนทนาที่จำเป็น</p>
+        </div>
+      </div>
+
+      <div class="menu-card" onclick="comingSoon('Quiz Global')">
+        <div class="menu-card-content">
+          <div class="menu-card-icon">🎯</div>
+          <h3>Quiz Complet • แบบทดสอบ</h3>
+          <p>Testez toutes vos connaissances avec des quiz adaptatifs personnalisés • ทดสอบความรู้แบบครบถ้วน</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton de basculement de thème -->
+  <button id="theme-toggle" onclick="toggleTheme()" title="Basculer le thème">
+    <span id="theme-icon">🌙</span>
+  </button>
+
+  <script>
+    // Gestion du thème sombre/clair
+    function toggleTheme() {
+      const body = document.body;
+      const themeIcon = document.getElementById('theme-icon');
+      const isDark = body.classList.contains('dark-theme');
+      
+      if (isDark) {
+        body.classList.remove('dark-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('thaiApp_theme', 'light');
+      } else {
+        body.classList.add('dark-theme');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('thaiApp_theme', 'dark');
+      }
+      
+      // Animation du bouton
+      const button = document.getElementById('theme-toggle');
+      button.style.transform = 'scale(0.9) rotate(180deg)';
+      setTimeout(() => {
+        button.style.transform = '';
+      }, 300);
+    }
+
+    // Charger le thème sauvegardé
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('thaiApp_theme');
+      const themeIcon = document.getElementById('theme-icon');
+      
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        if (themeIcon) themeIcon.textContent = '☀️';
+      } else {
+        if (themeIcon) themeIcon.textContent = '🌙';
+      }
+    }
+
+    // Vérifier si l'utilisateur a déjà vu le popup
+    function checkIfFirstVisit() {
+      const hasSeenPopup = localStorage.getItem('thaiApp_hasSeenWelcome');
+      
+      // Si l'utilisateur a déjà vu le popup, ne pas l'afficher
+      if (hasSeenPopup === 'true') {
+        document.getElementById('popup-overlay').style.display = 'none';
+        document.getElementById('container').style.display = 'block';
+        document.getElementById('container').classList.add('fade-in-up');
+        
+        setTimeout(() => {
+          document.querySelectorAll('.menu-card').forEach((card, index) => {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.classList.add('fade-in-up');
+          });
+        }, 100);
+      }
+      // Sinon, le popup s'affiche par défaut (déjà dans le HTML)
+    }
+
+    // Navigation entre pages - ADAPTÉ pour la nouvelle arborescence
+    function navigateTo(page) {
+      localStorage.setItem('thaiApp_hasSeenWelcome', 'true');
+      
+      // Animation de sortie
+      document.body.style.opacity = '0.8';
+      document.body.style.transform = 'scale(0.98)';
+      
+      setTimeout(() => {
+        // Navigation vers les pages dans le dossier pages/thai/
+        window.location.href = page;
+      }, 200);
+    }
+
+    // Modal générique améliorée
+    function showModal(title, message) {
+      const modal = document.createElement('div');
+      modal.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: white;
+          padding: 2.5rem;
+          border-radius: 20px;
+          box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+          z-index: 2000;
+          text-align: center;
+          max-width: 450px;
+          width: 90%;
+          animation: modalSlideIn 0.4s ease-out;
+        ">
+          <div style="
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+          ">🚀</div>
+          <h3 style="
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+          ">${title}</h3>
+          <p style="color: #666; margin-bottom: 2rem; line-height: 1.5;">${message}</p>
+          <button onclick="this.parentElement.parentElement.remove()" style="
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+          ">Compris !</button>
+        </div>
+        <div style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.6);
+          z-index: 1999;
+          backdrop-filter: blur(5px);
+        " onclick="this.parentElement.remove()"></div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Animation du bouton au hover
+      const button = modal.querySelector('button');
+      button.addEventListener('mouseenter', () => {
+        button.style.transform = 'translateY(-2px)';
+        button.style.boxShadow = '0 8px 25px rgba(76, 175, 80, 0.4)';
+      });
+      button.addEventListener('mouseleave', () => {
+        button.style.transform = '';
+        button.style.boxShadow = '';
+      });
+    }
+
+    function closePopup() {
+      localStorage.setItem('thaiApp_hasSeenWelcome', 'true');
+      
+      // Animation de fermeture du popup
+      const popup = document.getElementById('popup');
+      popup.style.transform = 'scale(0.9)';
+      popup.style.opacity = '0';
+      
+      setTimeout(() => {
+        document.getElementById('popup-overlay').style.display = 'none';
+        document.getElementById('container').style.display = 'block';
+        document.getElementById('container').classList.add('fade-in-up');
+        
+        // Animation échelonnée des cartes
+        setTimeout(() => {
+          document.querySelectorAll('.menu-card').forEach((card, index) => {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.classList.add('fade-in-up');
+          });
+        }, 100);
+      }, 300);
+    }
+
+    function comingSoon(feature) {
+      showModal(
+        feature, 
+        'Cette fonctionnalité passionnante arrive très bientôt ! Restez connecté pour découvrir de nouveaux moyens d\'apprendre le thaï.'
+      );
+    }
+
+    // Égaliser les hauteurs des cartes
+    function equalizeCardHeights() {
+      const cards = document.querySelectorAll('.menu-card');
+      
+      // Reset toutes les hauteurs pour permettre le calcul
+      cards.forEach(card => {
+        card.style.height = 'auto';
+      });
+      
+      // Attendre que le DOM soit rendu
+      setTimeout(() => {
+        let maxHeight = 0;
+        
+        // Trouver la hauteur maximale
+        cards.forEach(card => {
+          const cardHeight = card.offsetHeight;
+          if (cardHeight > maxHeight) {
+            maxHeight = cardHeight;
+          }
+        });
+        
+        // Appliquer la hauteur maximale à toutes les cartes
+        cards.forEach(card => {
+          card.style.height = maxHeight + 'px';
+        });
+        
+        console.log(`Hauteur des cartes égalisée à: ${maxHeight}px`);
+      }, 100);
+    }
+
+    // Fonction pour ajuster les hauteurs au redimensionnement
+    function handleResize() {
+      clearTimeout(window.resizeTimeout);
+      window.resizeTimeout = setTimeout(() => {
+        equalizeCardHeights();
+      }, 300);
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedTheme();
+      checkIfFirstVisit();
+      
+      // Ajouter les animations après un court délai
+      setTimeout(() => {
+        addCardAnimations();
+      }, 1000);
+      
+      console.log('Application d\'apprentissage du thaï initialisée');
+    });
+
+    // Animation de chargement pour les transitions
+    function createLoadingAnimation() {
+      const loader = document.createElement('div');
+      loader.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3000;
+        display: none;
+      `;
+      loader.innerHTML = `
+        <div style="
+          width: 50px;
+          height: 50px;
+          border: 4px solid #f3f3f3;
+          border-top: 4px solid #4caf50;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+        "></div>
+      `;
+      document.body.appendChild(loader);
+      return loader;
+    }
+
+    // Ajouter l'animation de rotation
+    const spinStyle = document.createElement('style');
+    spinStyle.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      @keyframes modalSlideIn {
+        from {
+          transform: translate(-50%, -50%) scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+      }
+    `;
+    document.head.appendChild(spinStyle);
+  </script>
+</body>
+</html>

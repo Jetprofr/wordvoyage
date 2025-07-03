@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apprendre l'Alphabet Thaï</title>
+  
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    #container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: block;
+    }
+
+    #header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin: 0;
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      font-weight: 700;
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 2rem;
+      top: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .overall-progress {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .progress-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#9c27b0 var(--progress, 0%), #e0e0e0 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      position: relative;
+      box-shadow: 0 8px 25px rgba(156, 39, 176, 0.3);
+    }
+
+    .progress-circle::before {
+      content: '';
+      width: 90px;
+      height: 90px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .progress-text {
+      position: relative;
+      z-index: 1;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .learning-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .category-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(135deg, #e0e0e0, #e0e0e0);
+      transition: all 0.3s ease;
+    }
+
+    .category-card.completed::before {
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+    }
+
+    .category-card.in-progress::before {
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+    }
+
+    .category-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    .category-status {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+
+    .status-completed { 
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+    }
+    .status-progress { 
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+    }
+    .status-locked { 
+      background: linear-gradient(135deg, #ccc, #999);
+    }
+
+    .category-description {
+      color: #666;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .category-preview {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .letter-preview {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      padding: 0.5rem 0.8rem;
+      font-size: 1.3rem;
+      color: #333;
+      font-family: 'Times New Roman', serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .letter-preview:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .category-progress {
+      background: #f0f0f0;
+      border-radius: 15px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .category-progress-fill {
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      height: 100%;
+      transition: width 0.5s ease;
+      border-radius: 15px;
+    }
+
+    .category-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      border: none;
+      color: white;
+      padding: 1.2rem;
+      border-radius: 15px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+    }
+
+    .category-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+    }
+
+    .category-btn:disabled {
+      background: linear-gradient(135deg, #ccc, #999);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .category-btn.completed {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .category-btn.completed:hover {
+      box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    }
+
+    .learning-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .learning-content {
+      background: white;
+      border-radius: 25px;
+      padding: 3rem;
+      max-width: 800px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: modalSlideIn 0.4s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-30px) scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: linear-gradient(135deg, #ff5722, #d32f2f);
+      color: white;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.3rem;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+    }
+
+    .close-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+    }
+
+    .letter-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .letter-item:hover {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-color: #9c27b0;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .letter-display {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .letter-thai {
+      font-size: 3.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      min-width: 100px;
+      font-family: 'Times New Roman', serif;
+      text-align: center;
+    }
+
+    .letter-info {
+      flex: 1;
+    }
+
+    .letter-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .letter-phonetic {
+      font-size: 1.1rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .letter-type {
+      font-size: 0.95rem;
+      color: #999;
+      margin-top: 0.3rem;
+    }
+
+    .letter-actions {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .play-btn, .learn-btn {
+      border: none;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .play-btn {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .learn-btn {
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      color: white;
+    }
+
+    .learn-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+    }
+
+    .learn-btn.learned {
+      background: linear-gradient(135deg, #4CAF50, #388E3C);
+    }
+
+    .learn-btn.learned:hover {
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .validation-btn {
+      background: linear-gradient(135deg, #9c27b0, #e91e63);
+      color: white;
+      border: none;
+      padding: 1.2rem 2.5rem;
+      border-radius: 25px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+    }
+
+    .validation-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .learning-categories {
+        grid-template-columns: 1fr;
+      }
+      
+      #header h1 {
+        font-size: 2.2rem;
+      }
+      
+      .letter-display {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+      
+      .letter-thai {
+        min-width: auto;
+        font-size: 3rem;
+      }
+
+      .back-btn {
+        position: static;
+        margin-bottom: 1rem;
+        display: block;
+        text-align: center;
+      }
+
+      #header {
+        position: relative;
+        padding-top: 1rem;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* Styles pour les notifications toast */
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header -->
+    <div id="header">
+      <a href="alphabet-menu_thai.html" class="back-btn">← Menu Alphabet</a>
+      <h1>📚 Apprendre l'Alphabet</h1>
+      <p>Découvrez les lettres thaï par groupes progressifs</p>
+    </div>
+
+    <!-- Progression générale -->
+    <div class="overall-progress">
+      <h3>🎯 Votre Progression Globale</h3>
+      <div class="progress-circle" style="--progress: 0%">
+        <span class="progress-text" id="overall-percentage">0%</span>
+      </div>
+      <p><span id="learned-total">0</span> lettres apprises sur <span id="total-letters">35</span></p>
+    </div>
+
+    <!-- Catégories d'apprentissage -->
+    <div class="learning-categories">
+      
+      <!-- Groupe 1: Consonnes de base -->
+      <div class="category-card">
+        <div class="category-header">
+          <h3 class="category-title">🌱 Consonnes de Base</h3>
+          <div class="category-status status-progress">0</div>
+        </div>
+        <p class="category-description">Les 9 consonnes les plus communes et leur prononciation</p>
+        <div class="category-preview">
+          <span class="letter-preview">ก</span>
+          <span class="letter-preview">ข</span>
+          <span class="letter-preview">ค</span>
+          <span class="letter-preview">ง</span>
+          <span class="letter-preview">จ</span>
+          <span class="letter-preview">...</span>
+        </div>
+        <div class="category-progress">
+          <div class="category-progress-fill" style="width: 0%"></div>
+        </div>
+        <button class="category-btn" onclick="openCategory('basic_consonants')">
+          🚀 Commencer (0/9)
+        </button>
+      </div>
+
+      <!-- Groupe 2: Voyelles courtes -->
+      <div class="category-card">
+        <div class="category-header">
+          <h3 class="category-title">🔤 Voyelles Courtes</h3>
+          <div class="category-status status-locked">🔒</div>
+        </div>
+        <p class="category-description">Les voyelles courtes essentielles avec 9 sons de base</p>
+        <div class="category-preview">
+          <span class="letter-preview">อะ</span>
+          <span class="letter-preview">อิ</span>
+          <span class="letter-preview">อุ</span>
+          <span class="letter-preview">เอะ</span>
+          <span class="letter-preview">...</span>
+        </div>
+        <div class="category-progress">
+          <div class="category-progress-fill" style="width: 0%"></div>
+        </div>
+        <button class="category-btn" disabled>
+          🔒 Débloqué après "Consonnes de Base"
+        </button>
+      </div>
+
+      <!-- Groupe 3: Voyelles longues -->
+      <div class="category-card">
+        <div class="category-header">
+          <h3 class="category-title">🎵 Voyelles Longues</h3>
+          <div class="category-status status-locked">🔒</div>
+        </div>
+        <p class="category-description">Les voyelles longues correspondant aux courtes</p>
+        <div class="category-preview">
+          <span class="letter-preview">อา</span>
+          <span class="letter-preview">อี</span>
+          <span class="letter-preview">อู</span>
+          <span class="letter-preview">เอ</span>
+          <span class="letter-preview">...</span>
+        </div>
+        <div class="category-progress">
+          <div class="category-progress-fill" style="width: 0%"></div>
+        </div>
+        <button class="category-btn" disabled>
+          🔒 Débloqué après "Voyelles Courtes"
+        </button>
+      </div>
+
+      <!-- Groupe 4: Consonnes intermédiaires -->
+      <div class="category-card">
+        <div class="category-header">
+          <h3 class="category-title">📝 Consonnes Intermédiaires</h3>
+          <div class="category-status status-locked">🔒</div>
+        </div>
+        <p class="category-description">Consonnes avec sons similaires et variantes</p>
+        <div class="category-preview">
+          <span class="letter-preview">ฆ</span>
+          <span class="letter-preview">ช</span>
+          <span class="letter-preview">ซ</span>
+          <span class="letter-preview">ฌ</span>
+          <span class="letter-preview">...</span>
+        </div>
+        <div class="category-progress">
+          <div class="category-progress-fill" style="width: 0%"></div>
+        </div>
+        <button class="category-btn" disabled>
+          🔒 Débloqué après "Voyelles Longues"
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal d'apprentissage -->
+  <div id="learning-modal" class="learning-modal">
+    <div class="learning-content">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h2 id="modal-title">Apprendre les Consonnes de Base</h2>
+      <div id="modal-content">
+        <!-- Le contenu sera généré dynamiquement -->
+      </div>
+      <div style="margin-top: 2rem; text-align: center;">
+        <button class="validation-btn" onclick="startValidationQuiz()">🎯 Test de validation</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Données des catégories d'alphabet
+    const alphabetCategories = {
+      basic_consonants: {
+        title: "🌱 Consonnes de Base",
+        letters: [
+          { thai: "ก", name: "kor kai", phonetic: "g", type: "consonne", sound: "comme dans 'gare'" },
+          { thai: "ข", name: "khor khai", phonetic: "kh", type: "consonne", sound: "aspiré" },
+          { thai: "ค", name: "khor khwai", phonetic: "kh2", type: "consonne", sound: "aspiré (variante)" },
+          { thai: "ง", name: "ngor nguu", phonetic: "ng", type: "consonne", sound: "comme dans 'parking'" },
+          { thai: "จ", name: "jor jaan", phonetic: "j", type: "consonne", sound: "comme dans 'jeu'" },
+          { thai: "ด", name: "dor dek", phonetic: "d", type: "consonne", sound: "comme dans 'dort'" },
+          { thai: "ต", name: "tor tao", phonetic: "t", type: "consonne", sound: "comme dans 'table'" },
+          { thai: "น", name: "nor nuu", phonetic: "n", type: "consonne", sound: "comme dans 'nous'" },
+          { thai: "ม", name: "mor maa", phonetic: "m", type: "consonne", sound: "comme dans 'maman'" }
+        ]
+      },
+      short_vowels: {
+        title: "🔤 Voyelles Courtes",
+        letters: [
+          { thai: "อะ", name: "sara a", phonetic: "a", type: "voyelle courte", sound: "comme dans 'patte'" },
+          { thai: "อิ", name: "sara i", phonetic: "i", type: "voyelle courte", sound: "comme dans 'lit'" },
+          { thai: "อึ", name: "sara ue", phonetic: "ue", type: "voyelle courte", sound: "comme dans 'rue'" },
+          { thai: "อุ", name: "sara u", phonetic: "u", type: "voyelle courte", sound: "comme dans 'loup'" },
+          { thai: "เอะ", name: "sara e", phonetic: "e", type: "voyelle courte", sound: "comme dans 'met'" },
+          { thai: "แอะ", name: "sara ae", phonetic: "ae", type: "voyelle courte", sound: "comme dans 'cat' anglais" },
+          { thai: "โอะ", name: "sara o", phonetic: "o", type: "voyelle courte", sound: "comme dans 'port'" },
+          { thai: "เอาะ", name: "sara aw", phonetic: "aw", type: "voyelle courte", sound: "voyelle courte 'aw'" },
+          { thai: "เออะ", name: "sara oe", phonetic: "oe", type: "voyelle courte", sound: "voyelle courte 'oe'" }
+        ]
+      },
+      long_vowels: {
+        title: "🎵 Voyelles Longues",
+        letters: [
+          { thai: "อา", name: "sara aa", phonetic: "aa", type: "voyelle longue", sound: "comme dans 'pâte'" },
+          { thai: "อี", name: "sara ii", phonetic: "ii", type: "voyelle longue", sound: "comme dans 'vie'" },
+          { thai: "อื", name: "sara uue", phonetic: "uue", type: "voyelle longue", sound: "comme dans 'rue' long" },
+          { thai: "อู", name: "sara uu", phonetic: "uu", type: "voyelle longue", sound: "comme dans 'loup' long" },
+          { thai: "เอ", name: "sara ee", phonetic: "ee", type: "voyelle longue", sound: "comme dans 'fée'" },
+          { thai: "แอ", name: "sara aee", phonetic: "aee", type: "voyelle longue", sound: "comme dans 'cat' long" },
+          { thai: "โอ", name: "sara oo", phonetic: "oo", type: "voyelle longue", sound: "comme dans 'pot'" },
+          { thai: "ออ", name: "sara aaw", phonetic: "aaw", type: "voyelle longue", sound: "voyelle longue 'aaw'" },
+          { thai: "เออ", name: "sara ooe", phonetic: "ooe", type: "voyelle longue", sound: "voyelle longue 'ooe'" }
+        ]
+      },
+      intermediate_consonants: {
+        title: "📝 Consonnes Intermédiaires",
+        letters: [
+          { thai: "ฆ", name: "khor rakhang", phonetic: "kh", type: "consonne", sound: "aspiré fort" },
+          { thai: "ช", name: "chor chang", phonetic: "ch", type: "consonne", sound: "comme dans 'chat'" },
+          { thai: "ซ", name: "sor so", phonetic: "s", type: "consonne", sound: "comme dans 'soir'" },
+          { thai: "ฌ", name: "chor choe", phonetic: "ch", type: "consonne", sound: "rare, comme 'ch'" },
+          { thai: "ญ", name: "yor ying", phonetic: "y", type: "consonne", sound: "comme dans 'yeux'" },
+          { thai: "ฎ", name: "dor chada", phonetic: "d", type: "consonne", sound: "d rétroflexe" },
+          { thai: "ฏ", name: "tor patak", phonetic: "t", type: "consonne", sound: "t rétroflexe" },
+          { thai: "ฐ", name: "thor than", phonetic: "th", type: "consonne", sound: "th aspiré" }
+        ]
+      }
+    };
+
+    let currentCategory = null;
+    let alphabetProgress = {};
+
+    // ========== FONCTIONS LOCALSTORAGE ==========
+
+    function loadAlphabetProgress() {
+      try {
+        const saved = localStorage.getItem('thaiAlphabetProgress');
+        if (saved) {
+          alphabetProgress = JSON.parse(saved);
+        } else {
+          alphabetProgress = {
+            completedGroups: [],
+            learnedLetters: new Set(),
+            groupProgress: {},
+            totalProgress: 0,
+            writingAccuracy: 0,
+            lastUpdated: Date.now()
+          };
+          saveAlphabetProgress();
+        }
+        
+        if (Array.isArray(alphabetProgress.learnedLetters)) {
+          alphabetProgress.learnedLetters = new Set(alphabetProgress.learnedLetters);
+        }
+        
+        console.log('Progrès alphabet chargés:', alphabetProgress);
+      } catch (error) {
+        console.error('Erreur lors du chargement alphabet:', error);
+        alphabetProgress = {
+          completedGroups: [],
+          learnedLetters: new Set(),
+          groupProgress: {},
+          totalProgress: 0,
+          writingAccuracy: 0,
+          lastUpdated: Date.now()
+        };
+      }
+    }
+
+    function saveAlphabetProgress() {
+      try {
+        const toSave = {
+          ...alphabetProgress,
+          learnedLetters: Array.from(alphabetProgress.learnedLetters),
+          lastUpdated: Date.now()
+        };
+        
+        localStorage.setItem('thaiAlphabetProgress', JSON.stringify(toSave));
+        console.log('Progrès alphabet sauvegardés:', toSave);
+        
+        updateGlobalAlphabetStats();
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde alphabet:', error);
+      }
+    }
+
+    function updateGlobalAlphabetStats() {
+      const totalLetters = Object.values(alphabetCategories).reduce((sum, cat) => sum + cat.letters.length, 0);
+      const learnedCount = alphabetProgress.learnedLetters.size;
+      const globalPercentage = Math.round((learnedCount / totalLetters) * 100);
+      
+      const globalStats = JSON.parse(localStorage.getItem('thaiAlphabetStats')) || {};
+      globalStats.learnedCount = learnedCount;
+      globalStats.totalLetters = totalLetters;
+      globalStats.learningProgress = globalPercentage;
+      globalStats.writingAccuracy = alphabetProgress.writingAccuracy || 0;
+      localStorage.setItem('thaiAlphabetStats', JSON.stringify(globalStats));
+    }
+
+    function markLetterLearned(letter) {
+      alphabetProgress.learnedLetters.add(letter);
+      saveAlphabetProgress();
+      console.log(`Lettre ${letter} marquée comme apprise`);
+    }
+
+    function calculateGroupProgress(groupKey) {
+      const group = alphabetCategories[groupKey];
+      if (!group) return { learned: 0, total: 0, percentage: 0 };
+      
+      const learnedInGroup = group.letters.filter(letter => 
+        alphabetProgress.learnedLetters.has(letter.thai)
+      ).length;
+      const percentage = Math.round((learnedInGroup / group.letters.length) * 100);
+      
+      alphabetProgress.groupProgress[groupKey] = percentage;
+      
+      return {
+        learned: learnedInGroup,
+        total: group.letters.length,
+        percentage: percentage
+      };
+    }
+
+    function isGroupUnlocked(groupKey) {
+      const groupOrder = ['basic_consonants', 'short_vowels', 'long_vowels', 'intermediate_consonants'];
+      const currentIndex = groupOrder.indexOf(groupKey);
+      
+      if (currentIndex === 0) return true; // La première est toujours débloquée
+      
+      const previousGroup = groupOrder[currentIndex - 1];
+      return alphabetProgress.completedGroups.includes(previousGroup);
+    }
+
+    // ========== FONCTIONS D'AFFICHAGE ==========
+
+    function updateProgressDisplay() {
+      const totalLetters = Object.values(alphabetCategories).reduce((sum, cat) => sum + cat.letters.length, 0);
+      const learnedTotal = alphabetProgress.learnedLetters.size;
+      const globalPercentage = Math.round((learnedTotal / totalLetters) * 100);
+      
+      document.getElementById('overall-percentage').textContent = globalPercentage + '%';
+      document.getElementById('learned-total').textContent = learnedTotal;
+      document.getElementById('total-letters').textContent = totalLetters;
+      
+      const progressCircle = document.querySelector('.progress-circle');
+      progressCircle.style.setProperty('--progress', globalPercentage + '%');
+      
+      updateCategoryCards();
+    }
+
+    function updateCategoryCards() {
+      console.log('Updating category cards...');
+      const groupOrder = ['basic_consonants', 'short_vowels', 'long_vowels', 'intermediate_consonants'];
+      const cards = document.querySelectorAll('.category-card');
+      
+      console.log('Found cards:', cards.length);
+      console.log('Group order:', groupOrder);
+      
+      cards.forEach((card, index) => {
+        if (index >= groupOrder.length) return; // Skip cards beyond our defined groups
+        
+        const groupKey = groupOrder[index];
+        const progress = calculateGroupProgress(groupKey);
+        const isUnlocked = isGroupUnlocked(groupKey);
+        const isCompleted = alphabetProgress.completedGroups.includes(groupKey);
+        
+        console.log(`Card ${index} (${groupKey}):`, {
+          progress,
+          isUnlocked,
+          isCompleted
+        });
+        
+        card.className = 'category-card';
+        if (isCompleted) {
+          card.classList.add('completed');
+        } else if (progress.percentage > 0 && isUnlocked) {
+          card.classList.add('in-progress');
+        }
+        
+        const statusEl = card.querySelector('.category-status');
+        if (isCompleted) {
+          statusEl.className = 'category-status status-completed';
+          statusEl.textContent = '✓';
+        } else if (isUnlocked && progress.percentage > 0) {
+          statusEl.className = 'category-status status-progress';
+          statusEl.textContent = progress.learned;
+        } else if (isUnlocked) {
+          statusEl.className = 'category-status status-progress';
+          statusEl.textContent = '0';
+        } else {
+          statusEl.className = 'category-status status-locked';
+          statusEl.textContent = '🔒';
+        }
+        
+        const progressBar = card.querySelector('.category-progress-fill');
+        progressBar.style.width = progress.percentage + '%';
+        
+        const button = card.querySelector('.category-btn');
+        if (isCompleted) {
+          button.className = 'category-btn completed';
+          button.textContent = `✓ Réviser (${progress.learned}/${progress.total})`;
+          button.disabled = false;
+          button.onclick = () => openCategory(groupKey);
+        } else if (isUnlocked) {
+          button.className = 'category-btn';
+          button.textContent = progress.percentage > 0 
+            ? `📖 Continuer (${progress.learned}/${progress.total})`
+            : `🚀 Commencer (${progress.learned}/${progress.total})`;
+          button.disabled = false;
+          button.onclick = () => openCategory(groupKey);
+          console.log(`Button for ${groupKey} is now enabled`);
+        } else {
+          button.className = 'category-btn';
+          button.textContent = '🔒 Débloqué après le groupe précédent';
+          button.disabled = true;
+          button.onclick = null;
+        }
+      });
+      
+      console.log('Category cards update completed');
+    }
+
+    function showSuccessMessage(message) {
+      const toast = document.createElement('div');
+      toast.innerHTML = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+        z-index: 3000;
+        animation: slideInRight 0.4s ease-out;
+        font-weight: 600;
+        font-size: 1rem;
+        max-width: 300px;
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease-in';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    function showWarningMessage(message) {
+      const toast = document.createElement('div');
+      toast.innerHTML = message;
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        z-index: 3000;
+        animation: slideInRight 0.4s ease-out;
+        font-weight: 600;
+        font-size: 1rem;
+        max-width: 300px;
+      `;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease-in';
+        setTimeout(() => toast.remove(), 400);
+      }, 4000);
+    }
+
+    // ========== FONCTIONS DE NAVIGATION ==========
+
+    function openCategory(groupKey) {
+      console.log('Opening category:', groupKey);
+      currentCategory = groupKey;
+      const group = alphabetCategories[groupKey];
+      
+      if (!group) {
+        console.error('Group not found:', groupKey);
+        return;
+      }
+      
+      console.log('Group data:', group);
+      
+      document.getElementById('modal-title').textContent = group.title;
+      
+      let content = '';
+      group.letters.forEach((letter) => {
+        const isLearned = alphabetProgress.learnedLetters.has(letter.thai);
+        const learnedClass = isLearned ? 'style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); border-color: #9c27b0;"' : '';
+        const checkmark = isLearned ? ' ✓' : '';
+        
+        content += `
+          <div class="letter-item" ${learnedClass}>
+            <div class="letter-display">
+              <div class="letter-thai">${letter.thai}${checkmark}</div>
+              <div class="letter-info">
+                <div class="letter-name">${letter.name}</div>
+                <div class="letter-phonetic">Prononciation: /${letter.phonetic}/</div>
+                <div class="letter-type">${letter.type} - ${letter.sound}</div>
+              </div>
+            </div>
+            <div class="letter-actions">
+              <button class="play-btn" onclick="playLetter('${letter.phonetic}')" title="Écouter">🔊</button>
+              <button class="learn-btn ${isLearned ? 'learned' : ''}" onclick="toggleLetterLearned('${letter.thai}')" title="${isLearned ? 'Retirer' : 'Marquer comme appris'}">
+                ${isLearned ? '✓' : '+'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      console.log('Generated content length:', content.length);
+      document.getElementById('modal-content').innerHTML = content;
+      
+      const modal = document.getElementById('learning-modal');
+      console.log('Modal element:', modal);
+      modal.style.display = 'flex';
+      
+      console.log('Modal opened successfully');
+    }
+
+    function toggleLetterLearned(letter) {
+      if (alphabetProgress.learnedLetters.has(letter)) {
+        alphabetProgress.learnedLetters.delete(letter);
+        showSuccessMessage(`❌ Lettre ${letter} retirée des lettres apprises`);
+      } else {
+        alphabetProgress.learnedLetters.add(letter);
+        showSuccessMessage(`✅ Lettre ${letter} marquée comme apprise !`);
+      }
+      
+      saveAlphabetProgress();
+      
+      openCategory(currentCategory);
+      
+      setTimeout(() => {
+        updateProgressDisplay();
+      }, 100);
+    }
+
+    function closeModal() {
+      document.getElementById('learning-modal').style.display = 'none';
+    }
+
+    function playLetter(phonetic) {
+      try {
+        // Chemin adapté à la nouvelle arborescence
+        const audio = new Audio(`../../audio/alphabet/thai/${phonetic}.mp3`);
+        
+        audio.onerror = function() {
+          console.error(`Erreur: Fichier audio non trouvé: ../../audio/alphabet/thai/${phonetic}.mp3`);
+          showWarningMessage(`🔊 Fichier audio non trouvé pour ${phonetic}`);
+        };
+        
+        audio.oncanplaythrough = function() {
+          console.log(`Audio loaded successfully: ../../audio/alphabet/thai/${phonetic}.mp3`);
+        };
+        
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log(`Playing audio for phonetic: ${phonetic}`);
+              showSuccessMessage(`🔊 Lecture de ${phonetic}`);
+            })
+            .catch(error => {
+              console.error('Erreur de lecture audio:', error);
+              if (error.name === 'NotAllowedError') {
+                showWarningMessage('🔊 Cliquez d\'abord quelque part sur la page pour activer l\'audio');
+              } else {
+                showWarningMessage(`🔊 Erreur de lecture audio pour ${phonetic}`);
+              }
+            });
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création de l\'audio:', error);
+        showWarningMessage(`🔊 Erreur technique pour ${phonetic}`);
+      }
+    }
+
+    function markGroupComplete() {
+      if (!currentCategory) return;
+      
+      const group = alphabetCategories[currentCategory];
+      
+      group.letters.forEach(letter => {
+        alphabetProgress.learnedLetters.add(letter.thai);
+      });
+      
+      if (!alphabetProgress.completedGroups.includes(currentCategory)) {
+        alphabetProgress.completedGroups.push(currentCategory);
+      }
+      
+      alphabetProgress.groupProgress[currentCategory] = 100;
+      
+      saveAlphabetProgress();
+      
+      showSuccessMessage(`🎉 Groupe "${group.title}" terminé !`);
+      
+      closeModal();
+      setTimeout(() => {
+        updateProgressDisplay();
+      }, 500);
+    }
+
+    function startValidationQuiz() {
+      if (!currentCategory) return;
+      
+      const group = alphabetCategories[currentCategory];
+      const progress = calculateGroupProgress(currentCategory);
+      
+      if (progress.percentage < 80) {
+        showWarningMessage('⚠️ Apprenez au moins 80% des lettres avant de passer le test !');
+        return;
+      }
+      
+      // Pour l'instant, on considère que si l'utilisateur a appris 80%, il peut valider le groupe
+      markGroupComplete();
+    }
+
+    // ========== INITIALISATION ==========
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Initializing alphabet learning page...');
+      loadAlphabetProgress();
+      updateProgressDisplay();
+      
+      setTimeout(() => {
+        updateCategoryCards();
+        console.log('Category cards updated');
+      }, 100);
+      
+      setTimeout(() => {
+        document.querySelectorAll('.category-card').forEach((card, index) => {
+          card.style.animationDelay = (index * 0.1) + 's';
+          card.classList.add('fade-in-up');
+        });
+      }, 200);
+      
+      console.log('Alphabet learning page initialized');
+    });
+  </script>
+</body>
+</html>

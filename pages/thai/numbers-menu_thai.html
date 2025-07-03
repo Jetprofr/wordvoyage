@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nombres - Menu</title>
+  
+  <!-- CSS de secours pour s'assurer que ça fonctionne -->
+  <style>
+    /* Styles de secours si les CSS externes ne se chargent pas */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    #container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: block !important; /* Force l'affichage */
+    }
+
+    #header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: #4caf50;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 2rem;
+      top: 2rem;
+      background: #666;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: #555;
+      transform: translateY(-2px);
+    }
+
+    /* Menu spécialisé pour les modes */
+    .specialized-menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .mode-card {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      border: 4px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .mode-card:hover::before {
+      left: 100%;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+    }
+
+    .learn-mode:hover {
+      border-color: #2196F3;
+    }
+
+    .review-mode:hover {
+      border-color: #4CAF50;
+    }
+
+    .mode-icon {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 2rem;
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+      transition: transform 0.3s ease;
+    }
+
+    .learn-mode .mode-icon {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    .mode-card:hover .mode-icon {
+      transform: scale(1.15) rotate(10deg);
+    }
+
+    .mode-card h2 {
+      font-size: 2rem;
+      margin: 0 0 1rem;
+      color: #333;
+      transition: color 0.3s ease;
+    }
+
+    .mode-card:hover h2 {
+      color: #4caf50;
+    }
+
+    .learn-mode:hover h2 {
+      color: #2196F3;
+    }
+
+    .mode-card p {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+
+    .mode-features {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .feature {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Panneau de statistiques */
+    .stats-panel {
+      background: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-panel h3 {
+      color: #333;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .reset-stats-btn {
+      width: 45px !important;
+      height: 45px !important;
+      min-width: 45px !important;
+      border-radius: 50% !important;
+      background: linear-gradient(135deg, #ff5722, #e64a19) !important;
+      border: none !important;
+      color: white !important;
+      font-size: 1.2rem !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 3px 10px rgba(255, 87, 34, 0.3) !important;
+      text-transform: none !important;
+      letter-spacing: normal !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .reset-stats-btn:hover {
+      transform: translateY(-2px) scale(1.1) !important;
+      box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4) !important;
+      background: linear-gradient(135deg, #f4511e, #d84315) !important;
+    }
+
+    .user-switch-btn {
+      position: absolute;
+      right: 2rem;
+      top: 2rem;
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1rem;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .user-switch-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    }
+
+    #current-user-avatar {
+      font-size: 1.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #4CAF50;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    /* Modal de confirmation */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-content h3 {
+      color: #ff5722;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content p {
+      color: #666;
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    .modal-btn-danger {
+      background: linear-gradient(135deg, #ff5722, #e64a19);
+      color: white;
+    }
+
+    .modal-btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+    }
+
+    .modal-btn-cancel {
+      background: #f0f0f0;
+      color: #666;
+    }
+
+    .modal-btn-cancel:hover {
+      background: #e0e0e0;
+      transform: translateY(-2px);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+      z-index: 3000;
+      animation: slideInRight 0.4s ease-out;
+      font-weight: 600;
+      font-size: 1rem;
+      max-width: 300px;
+    }
+
+    .toast.warning {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .specialized-menu {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+      }
+      
+      .mode-card {
+        padding: 2rem;
+      }
+
+      #header h1 {
+        font-size: 2rem;
+      }
+
+      #container {
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .back-btn {
+        left: 1rem;
+        top: 1rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .user-switch-btn {
+        right: 1rem;
+        top: 1rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      #header {
+        padding: 1.5rem;
+      }
+
+      .mode-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+      }
+
+      .modal-content {
+        padding: 2rem;
+        margin: 1rem;
+      }
+
+      .modal-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header avec navigation -->
+    <div id="header">
+      <button onclick="navigateTo('index_thai.html')" class="back-btn">← Retour</button>
+      <button onclick="showUserSelector()" class="user-switch-btn" title="Changer d'utilisateur">
+        <span id="current-user-avatar">👩</span>
+        <span id="current-user-name">Utilisateur</span>
+      </button>
+      <h1>🔢 Nombres</h1>
+      <p>Choisissez votre mode d'apprentissage</p>
+    </div>
+
+    <!-- Menu spécifique aux nombres -->
+    <div id="numbers-menu" class="specialized-menu">
+      <div class="mode-card learn-mode" onclick="navigateTo('numbers-learn_thai.html')">
+        <div class="mode-icon">📚</div>
+        <h2>Apprendre</h2>
+        <p>Découvrez les nombres étape par étape avec des explications détaillées</p>
+        <div class="mode-features">
+          <span class="feature">• Progression guidée</span>
+          <span class="feature">• Explications audio</span>
+          <span class="feature">• Pas de pression</span>
+        </div>
+      </div>
+
+      <div class="mode-card review-mode" onclick="navigateTo('numbers-review_thai.html')">
+        <div class="mode-icon">🎯</div>
+        <h2>Réviser</h2>
+        <p>Testez vos connaissances avec notre jeu interactif par niveaux</p>
+        <div class="mode-features">
+          <span class="feature">• Jeu par niveaux</span>
+          <span class="feature">• Progression adaptive</span>
+          <span class="feature">• Défis chronométrés</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiques utilisateur -->
+    <div id="user-stats" class="stats-panel">
+      <div class="stats-header">
+        <h3>📊 Vos Statistiques</h3>
+        <button id="reset-stats-button" class="reset-stats-btn" onclick="showResetConfirmation()" title="Remettre à zéro">🔄</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" id="learned-count">0</div>
+          <div class="stat-label">Nombres appris</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="current-level">1</div>
+          <div class="stat-label">Niveau actuel</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="success-rate">0%</div>
+          <div class="stat-label">Taux de réussite</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de confirmation pour reset -->
+  <div id="reset-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3>⚠️ Confirmation de remise à zéro</h3>
+      <p>Êtes-vous sûr de vouloir remettre à zéro tous vos progrès ? Cette action est irréversible et supprimera :</p>
+      <ul style="text-align: left; color: #666; margin: 1rem 0;">
+        <li>Tous les nombres appris</li>
+        <li>Toute la progression des catégories</li>
+        <li>Les statistiques et le niveau actuel</li>
+      </ul>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-danger" onclick="confirmReset()">
+          🔄 Oui, tout remettre à zéro
+        </button>
+        <button class="modal-btn modal-btn-cancel" onclick="hideResetConfirmation()">
+          ❌ Annuler
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Navigation function
+    function navigateTo(page) {
+      document.body.style.opacity = '0.8';
+      document.body.style.transform = 'scale(0.98)';
+      
+      setTimeout(() => {
+        window.location.href = page;
+      }, 200);
+    }
+
+    // Charger les statistiques utilisateur
+    function loadUserStats() {
+      try {
+        // Charger les progrès d'apprentissage
+        const learningProgress = JSON.parse(localStorage.getItem('thaiLearningProgress')) || {
+          learnedNumbers: [],
+          completedCategories: [],
+          categoryProgress: {}
+        };
+
+        // Charger les stats générales
+        const stats = JSON.parse(localStorage.getItem('thaiAppStats')) || {
+          learnedCount: 0,
+          currentLevel: 1,
+          successRate: 0
+        };
+
+        // Calculer le nombre réel de nombres appris
+        let learnedCount = 0;
+        if (learningProgress.learnedNumbers) {
+          // Si c'est un array, utiliser la longueur
+          if (Array.isArray(learningProgress.learnedNumbers)) {
+            learnedCount = learningProgress.learnedNumbers.length;
+          } 
+          // Si c'est un Set converti en array, utiliser la longueur
+          else if (typeof learningProgress.learnedNumbers === 'object') {
+            learnedCount = Object.keys(learningProgress.learnedNumbers).length;
+          }
+        }
+
+        // Mettre à jour l'affichage
+        document.getElementById('learned-count').textContent = learnedCount;
+        document.getElementById('current-level').textContent = stats.currentLevel || 1;
+        document.getElementById('success-rate').textContent = (stats.successRate || 0) + '%';
+
+        console.log('Stats chargées:', { learnedCount, stats, learningProgress });
+      } catch (error) {
+        console.log('Erreur lors du chargement des stats:', error);
+        // Valeurs par défaut en cas d'erreur
+        document.getElementById('learned-count').textContent = '0';
+        document.getElementById('current-level').textContent = '1';
+        document.getElementById('success-rate').textContent = '0%';
+      }
+    }
+
+    // Afficher la modal de confirmation pour reset
+    function showResetConfirmation() {
+      document.getElementById('reset-modal').style.display = 'flex';
+    }
+
+    // Cacher la modal de confirmation
+    function hideResetConfirmation() {
+      document.getElementById('reset-modal').style.display = 'none';
+    }
+
+    // Confirmer la remise à zéro
+    function confirmReset() {
+      try {
+        // Supprimer tous les données d'apprentissage
+        localStorage.removeItem('thaiLearningProgress');
+        localStorage.removeItem('thaiAppStats');
+        
+        // Supprimer d'autres données liées si elles existent
+        localStorage.removeItem('thaiGameProgress');
+        localStorage.removeItem('thaiUserPreferences');
+        
+        // Afficher un message de confirmation
+        showToast('🔄 Toutes les données ont été remises à zéro !', 'warning');
+        
+        // Fermer la modal
+        hideResetConfirmation();
+        
+        // Recharger les stats (qui seront maintenant à zéro)
+        setTimeout(() => {
+          loadUserStats();
+        }, 500);
+        
+        console.log('Reset complet effectué');
+      } catch (error) {
+        console.error('Erreur lors du reset:', error);
+        showToast('❌ Erreur lors de la remise à zéro', 'warning');
+      }
+    }
+
+    // Afficher un toast de notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      
+      document.body.appendChild(toast);
+      
+      // Auto-suppression après 4 secondes
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease-in';
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 400);
+      }, 4000);
+    }
+
+    // Fonction placeholder pour le sélecteur d'utilisateur
+    function showUserSelector() {
+      showToast('🚀 Sélecteur d\'utilisateur à venir !');
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUserStats();
+      
+      // Animation des cartes
+      setTimeout(() => {
+        document.querySelectorAll('.mode-card').forEach((card, index) => {
+          card.style.animationDelay = (index * 0.2) + 's';
+          card.classList.add('fade-in-up');
+        });
+      }, 100);
+
+      // Fermer la modal si on clique en dehors
+      document.getElementById('reset-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          hideResetConfirmation();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

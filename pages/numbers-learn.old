@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apprendre les Nombres Thaï</title>
+  <link rel="stylesheet" href="../css/common.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body>
+  <div id="container">
+    <!-- Header -->
+    <div id="header">
+      <button onclick="navigateTo('numbers-menu.html')" class="back-btn">← Menu Nombres</button>
+      <h1>📚 Apprentissage des Nombres</h1>
+      <p>Découvrez les nombres thaï à votre rythme</p>
+    </div>
+
+    <!-- Interface d'apprentissage -->
+    <div id="learning-interface">
+      <!-- Progression -->
+      <div class="progress-section">
+        <div class="progress-info">
+          <span>Nombre <span id="current-position">1</span> sur <span id="total-numbers">10</span></span>
+          <span id="progress-percent">10%</span>
+        </div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Carte d'apprentissage -->
+      <div id="learning-card" class="learning-card">
+        <div class="number-display">
+          <div id="arabic-number" class="arabic-number">1</div>
+          <div id="thai-number" class="thai-number">หนึ่ง</div>
+        </div>
+        
+        <div class="audio-section">
+          <button id="play-audio" class="audio-btn" onclick="playCurrentAudio()">
+            🔊 Écouter la prononciation
+          </button>
+          <audio id="audio"></audio>
+        </div>
+
+        <div class="explanation-section">
+          <h3>💡 Explication</h3>
+          <p id="number-explanation">Ce nombre se prononce "neung" et s'écrit หนึ่ง en thaï.</p>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="learning-navigation">
+        <button id="prev-btn" onclick="previousNumber()" disabled>← Précédent</button>
+        <button id="next-btn" onclick="nextNumber()">Suivant →</button>
+        <button id="test-btn" onclick="testCurrentNumber()" class="test-btn">✓ Je connais ce nombre</button>
+      </div>
+    </div>
+
+    <!-- Liste de révision rapide -->
+    <div id="quick-review" class="quick-review">
+      <h3>🔍 Révision Rapide</h3>
+      <div id="learned-numbers" class="learned-grid">
+        <!-- Les nombres appris apparaîtront ici -->
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/navigation.js"></script>
+  <script src="../js/thai-data.js"></script>
+  <script>
+    let currentIndex = 0;
+    let learnedNumbers = new Set();
+    const learningSequence = [0,1,2,3,4,5,6,7,8,9,10]; // Séquence d'apprentissage
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+      loadLearningProgress();
+      displayCurrentNumber();
+    });
+
+    function displayCurrentNumber() {
+      const number = learningSequence[currentIndex];
+      document.getElementById('arabic-number').textContent = number;
+      document.getElementById('thai-number').textContent = thaiMap[number];
+      document.getElementById('current-position').textContent = currentIndex + 1;
+      document.getElementById('total-numbers').textContent = learningSequence.length;
+      
+      const percent = Math.round(((currentIndex + 1) / learningSequence.length) * 100);
+      document.getElementById('progress-percent').textContent = percent + '%';
+      document.getElementById('progress-fill').style.width = percent + '%';
+      
+      // Charger l'audio
+      document.getElementById('audio').src = `../audio/${number}.mp3`;
+      
+      // Mettre à jour les boutons
+      document.getElementById('prev-btn').disabled = currentIndex === 0;
+      document.getElementById('next-btn').disabled = currentIndex === learningSequence.length - 1;
+      
+      // Explication contextuelle
+      updateExplanation(number);
+    }
+
+    function updateExplanation(number) {
+      const explanations = {
+        0: "ศูนย์ (suun) - Zéro, le point de départ de tous les nombres.",
+        1: "หนึ่ง (neung) - Un, le premier nombre. Très important en thaï !",
+        2: "สอง (song) - Deux, facile à retenir car ressemble à 'song'.",
+        3: "สาม (saam) - Trois, prononcé comme 'sam' en anglais.",
+        // ... plus d'explications
+      };
+      
+      const explanation = explanations[number] || `Ce nombre se prononce et s'écrit ${thaiMap[number]} en thaï.`;
+      document.getElementById('number-explanation').textContent = explanation;
+    }
+
+    function nextNumber() {
+      if (currentIndex < learningSequence.length - 1) {
+        currentIndex++;
+        displayCurrentNumber();
+        animateCard();
+      }
+    }
+
+    function previousNumber() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        displayCurrentNumber();
+        animateCard();
+      }
+    }
+
+    function testCurrentNumber() {
+      const number = learningSequence[currentIndex];
+      learnedNumbers.add(number);
+      updateLearnedDisplay();
+      saveLearningProgress();
+      
+      // Animation de succès
+      showSuccessMessage();
+      
+      // Passer au suivant automatiquement
+      setTimeout(() => {
+        if (currentIndex < learningSequence.length - 1) {
+          nextNumber();
+        }
+      }, 1000);
+    }
+
+    function playCurrentAudio() {
+      const audio = document.getElementById('audio');
+      audio.currentTime = 0;
+      audio.play().catch(() => {
+        showMessage('Audio non disponible', 'info');
+      });
+    }
+
+    function animateCard() {
+      const card = document.getElementById('learning-card');
+      card.style.transform = 'translateX(20px)';
+      card.style.opacity = '0.8';
+      setTimeout(() => {
+        card.style.transform = 'translateX(0)';
+        card.style.opacity = '1';
+      }, 200);
+    }
+
+    function updateLearnedDisplay() {
+      const container = document.getElementById('learned-numbers');
+      container.innerHTML = '';
+      
+      learnedNumbers.forEach(number => {
+        const item = document.createElement('div');
+        item.className = 'learned-item';
+        item.innerHTML = `
+          <span class="learned-arabic">${number}</span>
+          <span class="learned-thai">${thaiMap[number]}</span>
+        `;
+        item.onclick = () => playNumberAudio(number);
+        container.appendChild(item);
+      });
+    }
+
+    function playNumberAudio(number) {
+      const tempAudio = new Audio(`../audio/${number}.mp3`);
+      tempAudio.play().catch(() => console.log('Audio non disponible'));
+    }
+
+    function showSuccessMessage() {
+      showMessage('✅ Nombre ajouté à vos connaissances !', 'success');
+    }
+
+    function loadLearningProgress() {
+      const saved = localStorage.getItem('thaiLearningProgress');
+      if (saved) {
+        const data = JSON.parse(saved);
+        currentIndex = data.currentIndex || 0;
+        learnedNumbers = new Set(data.learnedNumbers || []);
+        updateLearnedDisplay();
+      }
+    }
+
+    function saveLearningProgress() {
+      const data = {
+        currentIndex: currentIndex,
+        learnedNumbers: Array.from(learnedNumbers)
+      };
+      localStorage.setItem('thaiLearningProgress', JSON.stringify(data));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apprendre les Nombres Thaï</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    #container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    #header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin: 0;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 2rem;
+      top: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Progress Section */
+    .progress-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .progress-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: conic-gradient(#4CAF50 var(--progress, 0%), #e0e0e0 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      position: relative;
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+    }
+
+    .progress-circle::before {
+      content: '';
+      width: 90px;
+      height: 90px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .progress-text {
+      position: relative;
+      z-index: 1;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #4CAF50, #2e7d32);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Category Navigation */
+    .category-nav {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .category-tab {
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-tab.active {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border-color: #4CAF50;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .category-tab.completed {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      border-color: #2196F3;
+    }
+
+    .category-tab.locked {
+      background: #f0f0f0;
+      color: #999;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+
+    .category-tab:not(.locked):not(.active):hover {
+      background: #e8f5e8;
+      border-color: #4CAF50;
+      transform: translateY(-2px);
+    }
+
+    /* Numbers Grid */
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .number-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      border: 3px solid #e0e0e0;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .number-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .number-card:hover::before {
+      left: 100%;
+    }
+
+    .number-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #4CAF50;
+    }
+
+    .number-card.learned {
+      border-color: #4CAF50;
+      background: linear-gradient(135deg, #f8fff8, rgba(255, 255, 255, 0.95));
+    }
+
+    .number-card.learned .status-badge {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+    }
+
+    /* Card Content */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+    }
+
+    .number-visual {
+      text-align: center;
+      flex: 1;
+    }
+
+    .number-arabic {
+      font-size: 4rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #4CAF50, #2e7d32);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+      text-shadow: none;
+    }
+
+    .number-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin: 0 auto 1rem;
+      display: block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 2px solid #e0e0e0;
+    }
+
+    .number-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .number-dots {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 1rem;
+      min-height: 40px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .status-badge {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+    }
+
+    .card-content {
+      text-align: center;
+    }
+
+    .number-thai {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .number-phonetic {
+      font-size: 1.2rem;
+      color: #666;
+      font-style: italic;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .number-usage {
+      font-size: 0.9rem;
+      color: #777;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    /* Card Actions */
+    .card-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .action-btn {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      border: none;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px) scale(1.1);
+      box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+    }
+
+    .learn-btn {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .learn-btn:hover {
+      box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    }
+
+    .learn-btn.learned {
+      background: linear-gradient(135deg, #ff5722, #e64a19);
+      box-shadow: 0 4px 12px rgba(255, 87, 34, 0.3);
+    }
+
+    .learn-btn.learned:hover {
+      box-shadow: 0 6px 20px rgba(255, 87, 34, 0.4);
+    }
+
+    /* Quiz Section */
+    .quiz-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      margin-top: 3rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-progress-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .quiz-progress-bar {
+      background: #f0f0f0;
+      border-radius: 25px;
+      height: 50px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid #e0e0e0;
+    }
+
+    .quiz-progress-bar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .quiz-progress-fill {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      height: 100%;
+      border-radius: 22px;
+      transition: all 0.6s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-progress-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .quiz-progress-fill.complete {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      cursor: pointer;
+    }
+
+    .quiz-progress-fill.complete::after {
+      content: '🎯 CLIQUEZ POUR LE TEST !';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+      z-index: 2;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.05); }
+    }
+
+    .quiz-progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #666;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .quiz-progress-fill.complete .quiz-progress-text {
+      display: none;
+    }
+
+    .quiz-status {
+      color: #666;
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-top: 0.5rem;
+    }
+
+    .quiz-status.ready {
+      color: #2196F3;
+      font-weight: bold;
+      animation: readyPulse 2s infinite;
+    }
+
+    @keyframes readyPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Toast Notifications */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+      z-index: 3000;
+      animation: slideInRight 0.4s ease-out;
+      font-weight: 600;
+      font-size: 1rem;
+      max-width: 300px;
+    }
+
+    .toast.warning {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #container {
+        padding: 1rem;
+      }
+
+      #header h1 {
+        font-size: 2.5rem;
+      }
+
+      .numbers-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+      }
+
+      .number-card {
+        padding: 1.5rem;
+      }
+
+      .number-arabic {
+        font-size: 3rem;
+      }
+
+      .number-thai {
+        font-size: 2rem;
+      }
+
+      .category-tabs {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+
+      .category-tab {
+        padding: 0.8rem 1.5rem;
+        flex-shrink: 0;
+      }
+
+      .back-btn {
+        position: static;
+        margin-bottom: 1rem;
+        display: block;
+        text-align: center;
+      }
+
+      #header {
+        position: relative;
+        padding-top: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .numbers-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-actions {
+        gap: 0.5rem;
+      }
+
+      .action-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header -->
+    <div id="header">
+      <a href="numbers-menu_thai.html" class="back-btn">← Menu Nombres</a>
+      <h1>📚 Apprendre les Nombres</h1>
+      <p>Découvrez chaque nombre dans sa propre carte interactive</p>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section">
+      <h3>🎯 Votre Progression Globale</h3>
+      <div class="progress-circle" style="--progress: 0%">
+        <span class="progress-text" id="overall-percentage">0%</span>
+      </div>
+      <p><span id="learned-total">0</span> nombres appris sur <span id="total-numbers">60</span></p>
+    </div>
+
+    <!-- Category Navigation -->
+    <div class="category-nav">
+      <div class="category-tabs">
+        <div class="category-tab active" data-category="basics">
+          🌱 Bases (0-10)
+        </div>
+        <div class="category-tab locked" data-category="teens">
+          🔢 Adolescents (11-20)
+        </div>
+        <div class="category-tab locked" data-category="twenties">
+          ➕ Vingtaines (21-36)
+        </div>
+        <div class="category-tab locked" data-category="tens">
+          🔟 Dizaines (40-100)
+        </div>
+        <div class="category-tab locked" data-category="hundreds">
+          💯 Centaines (200-400)
+        </div>
+        <div class="category-tab locked" data-category="thousands">
+          🚀 Milliers (1000+)
+        </div>
+      </div>
+    </div>
+
+    <!-- Numbers Grid -->
+    <div class="numbers-grid" id="numbers-grid">
+      <!-- Les cartes seront générées dynamiquement ici -->
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="quiz-section">
+      <h3>🎯 Prêt pour le test ?</h3>
+      <div class="quiz-progress-container">
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quiz-progress-fill" style="width: 0%"></div>
+          <div class="quiz-progress-text" id="quiz-progress-text">0% appris</div>
+        </div>
+        <div class="quiz-status" id="quiz-status">
+          Apprenez tous les nombres de cette catégorie pour débloquer le test
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Données des catégories
+    const categories = {
+      basics: {
+        title: "🌱 Les Bases (0-10)",
+        numbers: [0,1,2,3,4,5,6,7,8,9,10],
+        phonetics: ["suun","neung","song","saam","sii","haa","hok","jet","paet","gao","sip"],
+        usages: [
+          "Zéro, rien du tout",
+          "Un, le début de tout",
+          "Deux, une paire",
+          "Trois, un groupe",
+          "Quatre, stabilité",
+          "Cinq, une main",
+          "Six, équilibre",
+          "Sept, chance",
+          "Huit, prospérité",
+          "Neuf, presque dix",
+          "Dix, une dizaine complète"
+        ]
+      },
+      teens: {
+        title: "🔢 Les Adolescents (11-20)", 
+        numbers: [11,12,13,14,15,16,17,18,19,20],
+        phonetics: ["sip-et","sip-song","sip-saam","sip-sii","sip-haa","sip-hok","sip-jet","sip-paet","sip-gao","yii-sip"],
+        usages: [
+          "Onze, après dix",
+          "Douze, une douzaine",
+          "Treize, malchance ou chance",
+          "Quatorze, deux semaines",
+          "Quinze, un quart d'heure",
+          "Seize, sweet sixteen",
+          "Dix-sept, presque adulte",
+          "Dix-huit, majorité",
+          "Dix-neuf, dernière année",
+          "Vingt, une vintaine"
+        ]
+      },
+      twenties: {
+        title: "➕ Les Vingtaines (21-36)",
+        numbers: [21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],
+        phonetics: ["yii-sip-et","yii-sip-song","yii-sip-saam","yii-sip-sii","yii-sip-haa","yii-sip-hok","yii-sip-jet","yii-sip-paet","yii-sip-gao","saam-sip","saam-sip-et","saam-sip-song","saam-sip-saam","saam-sip-sii","saam-sip-haa","saam-sip-hok"],
+        usages: [
+          "Vingt-et-un, blackjack!",
+          "Vingt-deux, un palindrome",
+          "Vingt-trois, nombre premier",
+          "Vingt-quatre, heures dans un jour",
+          "Vingt-cinq, un quart de cent",
+          "Vingt-six, lettres de l'alphabet",
+          "Vingt-sept, cube de 3",
+          "Vingt-huit, jours de février",
+          "Vingt-neuf, année bissextile",
+          "Trente, une trentaine",
+          "Trente-et-un, jours du mois",
+          "Trente-deux, dents d'adulte",
+          "Trente-trois, double trois",
+          "Trente-quatre, suite logique",
+          "Trente-cinq, vitesse en ville",
+          "Trente-six, 6 au carré"
+        ]
+      },
+      tens: {
+        title: "🔟 Les Dizaines (40-100)",
+        numbers: [40,50,60,70,80,100],
+        phonetics: ["sii-sip","haa-sip","hok-sip","jet-sip","paet-sip","neung-roi"],
+        usages: [
+          "Quarante, la crise de la quarantaine",
+          "Cinquante, demi-siècle",
+          "Soixante, retraite",
+          "Soixante-dix, sagesse",
+          "Quatre-vingts, longévité",
+          "Cent, pourcentage parfait"
+        ]
+      },
+      hundreds: {
+        title: "💯 Les Centaines (200-400)",
+        numbers: [200,300,400],
+        phonetics: ["song-roi","saam-roi","sii-roi"],
+        usages: [
+          "Deux cents, double centenaire",
+          "Trois cents, guerriers spartiates",
+          "Quatre cents, coups de Truffaut"
+        ]
+      },
+      thousands: {
+        title: "🚀 Grands Nombres (1000+)",
+        numbers: [1000,1500,2000,10000],
+        phonetics: ["neung-pan","pan-haa","song-pan","neung-muen"],
+        usages: [
+          "Mille, un millénaire",
+          "Mille cinq cents, Renaissance",
+          "Deux mille, nouveau millénaire",
+          "Dix mille, une myriade"
+        ]
+      }
+    };
+
+    const thaiMap = {
+      0: "ศูนย์", 1: "หนึ่ง", 2: "สอง", 3: "สาม", 4: "สี่", 5: "ห้า", 
+      6: "หก", 7: "เจ็ด", 8: "แปด", 9: "เก้า", 10: "สิบ", 11: "สิบเอ็ด", 
+      12: "สิบสอง", 13: "สิบสาม", 14: "สิบสี่", 15: "สิบห้า", 16: "สิบหก",
+      17: "สิบเจ็ด", 18: "สิบแปด", 19: "สิบเก้า", 20: "ยี่สิบ", 21: "ยี่สิบเอ็ด", 
+      22: "ยี่สิบสอง", 23: "ยี่สิบสาม", 24: "ยี่สิบสี่", 25: "ยี่สิบห้า", 
+      26: "ยี่สิบหก", 27: "ยี่สิบเจ็ด", 28: "ยี่สิบแปด", 29: "ยี่สิบเก้า", 
+      30: "สามสิบ", 31: "สามสิบเอ็ด", 32: "สามสิบสอง", 33: "สามสิบสาม", 
+      34: "สามสิบสี่", 35: "สามสิบห้า", 36: "สามสิบหก", 40: "สี่สิบ", 
+      50: "ห้าสิบ", 60: "หกสิบ", 70: "เจ็ดสิบ", 80: "แปดสิบ", 100: "หนึ่งร้อย",
+      200: "สองร้อย", 300: "สามร้อย", 400: "สี่ร้อย", 1000: "หนึ่งพัน", 
+      1500: "พันห้า", 2000: "สองพัน", 10000: "หนึ่งหมื่น"
+    };
+
+    let currentCategory = 'basics';
+    let learningProgress = {};
+
+    // ========== FONCTIONS LOCALSTORAGE ==========
+
+    function loadLearningProgress() {
+      try {
+        const saved = localStorage.getItem('thaiLearningProgress');
+        if (saved) {
+          learningProgress = JSON.parse(saved);
+        } else {
+          learningProgress = {
+            completedCategories: [],
+            learnedNumbers: new Set(),
+            categoryProgress: {},
+            totalProgress: 0,
+            lastUpdated: Date.now()
+          };
+          saveLearningProgress();
+        }
+        
+        if (Array.isArray(learningProgress.learnedNumbers)) {
+          learningProgress.learnedNumbers = new Set(learningProgress.learnedNumbers);
+        }
+        
+        console.log('Progrès chargés:', learningProgress);
+      } catch (error) {
+        console.error('Erreur lors du chargement:', error);
+        learningProgress = {
+          completedCategories: [],
+          learnedNumbers: new Set(),
+          categoryProgress: {},
+          totalProgress: 0,
+          lastUpdated: Date.now()
+        };
+      }
+    }
+
+    function saveLearningProgress() {
+      try {
+        const toSave = {
+          ...learningProgress,
+          learnedNumbers: Array.from(learningProgress.learnedNumbers),
+          lastUpdated: Date.now()
+        };
+        
+        localStorage.setItem('thaiLearningProgress', JSON.stringify(toSave));
+        console.log('Progrès sauvegardés:', toSave);
+        updateGlobalStats();
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error);
+      }
+    }
+
+    function updateGlobalStats() {
+      const totalNumbers = Object.values(categories).reduce((sum, cat) => sum + cat.numbers.length, 0);
+      const learnedCount = learningProgress.learnedNumbers.size;
+      const globalPercentage = Math.round((learnedCount / totalNumbers) * 100);
+      
+      const globalStats = JSON.parse(localStorage.getItem('thaiAppStats')) || {};
+      globalStats.learnedCount = learnedCount;
+      globalStats.totalNumbers = totalNumbers;
+      globalStats.learningProgress = globalPercentage;
+      localStorage.setItem('thaiAppStats', JSON.stringify(globalStats));
+    }
+
+    // ========== FONCTIONS DE GESTION DES IMAGES ==========
+
+    function createImageElement(number, phonetic) {
+      const img = document.createElement('img');
+      img.className = 'number-image';
+      img.alt = `Image pour le nombre ${number}`;
+      img.style.display = 'none'; // Masqué par défaut
+      
+      // Chemin de l'image adapté à la nouvelle arborescence
+      const imagePath = `../../images/nombres/thai/${phonetic}.png`;
+      
+      // Tester si l'image existe
+      img.onload = function() {
+        console.log(`Image trouvée pour ${number}: ${imagePath}`);
+        img.style.display = 'block';
+        
+        // Animation d'apparition
+        img.style.opacity = '0';
+        img.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          img.style.transition = 'all 0.4s ease';
+          img.style.opacity = '1';
+          img.style.transform = 'scale(1)';
+        }, 100);
+      };
+      
+      img.onerror = function() {
+        console.log(`Aucune image trouvée pour ${number}: ${imagePath}`);
+        img.style.display = 'none';
+        img.remove(); // Supprimer l'élément si pas d'image
+      };
+      
+      img.src = imagePath;
+      return img;
+    }
+
+    function getAudioPath(number) {
+      // Utiliser directement le numéro pour le nom du fichier
+      return `../../audio/nombres/thai/${number}.mp3`;
+    }
+
+    function getImagePath(phonetic, type = 'nombres') {
+      // Chemin modulaire pour différents types (nombres, alphabet, etc.)
+      return `../../images/${type}/thai/${phonetic}.png`;
+    }
+
+    function updateProgressDisplay() {
+      const totalNumbers = Object.values(categories).reduce((sum, cat) => sum + cat.numbers.length, 0);
+      const learnedTotal = learningProgress.learnedNumbers.size;
+      const globalPercentage = Math.round((learnedTotal / totalNumbers) * 100);
+      
+      document.getElementById('overall-percentage').textContent = globalPercentage + '%';
+      document.getElementById('learned-total').textContent = learnedTotal;
+      document.getElementById('total-numbers').textContent = totalNumbers;
+      
+      const progressCircle = document.querySelector('.progress-circle');
+      progressCircle.style.setProperty('--progress', globalPercentage + '%');
+      
+      updateCategoryTabs();
+      updateQuizButton();
+    }
+
+    function updateCategoryTabs() {
+      const categoryOrder = ['basics', 'teens', 'twenties', 'tens', 'hundreds', 'thousands'];
+      const tabs = document.querySelectorAll('.category-tab');
+      
+      tabs.forEach((tab, index) => {
+        const categoryKey = categoryOrder[index];
+        const isUnlocked = isCategoryUnlocked(categoryKey);
+        const isCompleted = learningProgress.completedCategories.includes(categoryKey);
+        
+        tab.className = 'category-tab';
+        
+        if (categoryKey === currentCategory) {
+          tab.classList.add('active');
+        } else if (isCompleted) {
+          tab.classList.add('completed');
+        } else if (!isUnlocked) {
+          tab.classList.add('locked');
+        }
+      });
+    }
+
+    function isCategoryUnlocked(categoryKey) {
+      const categoryOrder = ['basics', 'teens', 'twenties', 'tens', 'hundreds', 'thousands'];
+      const currentIndex = categoryOrder.indexOf(categoryKey);
+      
+      if (currentIndex === 0) return true;
+      
+      const previousCategory = categoryOrder[currentIndex - 1];
+      return learningProgress.completedCategories.includes(previousCategory);
+    }
+
+    function generateDots(number) {
+      if (number > 10) return '';
+      
+      let dots = '';
+      for (let i = 0; i < number; i++) {
+        dots += '<div class="dot"></div>';
+      }
+      return dots;
+    }
+
+    function renderNumbersGrid() {
+      const category = categories[currentCategory];
+      const grid = document.getElementById('numbers-grid');
+      
+      grid.innerHTML = '';
+      
+      category.numbers.forEach((number, index) => {
+        const phonetic = category.phonetics[index] || '';
+        const usage = category.usages[index] || '';
+        const isLearned = learningProgress.learnedNumbers.has(number);
+        
+        const card = document.createElement('div');
+        card.className = `number-card ${isLearned ? 'learned' : ''}`;
+        card.style.animationDelay = (index * 0.1) + 's';
+        
+        // Créer l'image (sera affichée seulement si elle existe)
+        const imageElement = createImageElement(number, phonetic);
+        
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="number-visual">
+              <div class="number-arabic">${number}</div>
+              <div class="image-container"></div>
+              <div class="number-dots">${generateDots(number)}</div>
+            </div>
+            <div class="status-badge">
+              ${isLearned ? '✅ Appris' : '📖 À apprendre'}
+            </div>
+          </div>
+          
+          <div class="card-content">
+            <div class="number-thai">${thaiMap[number]}</div>
+            <div class="number-phonetic">/${phonetic}/</div>
+            <div class="number-usage">${usage}</div>
+          </div>
+          
+          <div class="card-actions">
+            <button class="action-btn" onclick="playNumber(${number})" title="Écouter la prononciation">
+              🔊
+            </button>
+            <button class="action-btn learn-btn ${isLearned ? 'learned' : ''}" 
+                    onclick="toggleNumberLearned(${number})" 
+                    title="${isLearned ? 'Retirer des nombres appris' : 'Marquer comme appris'}">
+              ${isLearned ? '✓' : '+'}
+            </button>
+          </div>
+        `;
+        
+        // Ajouter l'image dans le conteneur approprié
+        const imageContainer = card.querySelector('.image-container');
+        imageContainer.appendChild(imageElement);
+        
+        card.classList.add('fade-in-up');
+        grid.appendChild(card);
+      });
+    }
+
+    function switchCategory(categoryKey) {
+      if (!isCategoryUnlocked(categoryKey)) {
+        showToast('🔒 Cette catégorie est verrouillée ! Terminez la précédente d\'abord.', 'warning');
+        return;
+      }
+      
+      currentCategory = categoryKey;
+      updateCategoryTabs();
+      renderNumbersGrid();
+      
+      // Scroll vers le haut de la grille
+      document.getElementById('numbers-grid').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+
+    function updateQuizButton() {
+      const category = categories[currentCategory];
+      const progress = calculateCategoryProgress(currentCategory);
+      
+      const progressFill = document.getElementById('quiz-progress-fill');
+      const progressText = document.getElementById('quiz-progress-text');
+      const quizStatus = document.getElementById('quiz-status');
+      
+      // Mettre à jour la barre de progression
+      const percentage = progress.percentage;
+      progressFill.style.width = percentage + '%';
+      progressText.textContent = `${percentage}% appris`;
+      
+      if (percentage === 100) {
+        // Catégorie complète - activer le test
+        progressFill.classList.add('complete');
+        progressFill.style.cursor = 'pointer';
+        quizStatus.textContent = '🎉 Parfait ! Cliquez sur la barre pour commencer le test de validation';
+        quizStatus.classList.add('ready');
+        
+        // Ajouter l'événement de clic
+        progressFill.onclick = startValidationQuiz;
+      } else {
+        // Catégorie incomplète
+        progressFill.classList.remove('complete');
+        progressFill.style.cursor = 'default';
+        quizStatus.textContent = `Apprenez tous les nombres de cette catégorie pour débloquer le test (${percentage}% complété)`;
+        quizStatus.classList.remove('ready');
+        
+        // Supprimer l'événement de clic
+        progressFill.onclick = null;
+      }
+    }
+
+    function calculateCategoryProgress(categoryKey) {
+      const category = categories[categoryKey];
+      const learnedInCategory = category.numbers.filter(num => 
+        learningProgress.learnedNumbers.has(num)
+      ).length;
+      const percentage = Math.round((learnedInCategory / category.numbers.length) * 100);
+      
+      learningProgress.categoryProgress[categoryKey] = percentage;
+      
+      return {
+        learned: learnedInCategory,
+        total: category.numbers.length,
+        percentage: percentage
+      };
+    }
+
+    // ========== FONCTIONS D'INTERACTION ==========
+
+    function toggleNumberLearned(number) {
+      if (learningProgress.learnedNumbers.has(number)) {
+        learningProgress.learnedNumbers.delete(number);
+        showToast(`❌ Nombre ${number} retiré des nombres appris`);
+      } else {
+        learningProgress.learnedNumbers.add(number);
+        showToast(`✅ Nombre ${number} marqué comme appris !`);
+      }
+      
+      saveLearningProgress();
+      
+      // Mettre à jour uniquement la carte concernée
+      setTimeout(() => {
+        renderNumbersGrid();
+        updateProgressDisplay();
+      }, 100);
+    }
+
+    function playNumber(number) {
+      try {
+        // Utiliser directement le numéro pour le nom du fichier
+        const audioPath = `../../audio/nombres/thai/${number}.mp3`;
+        const audio = new Audio(audioPath);
+        
+        console.log(`Lecture audio pour le nombre ${number}: ${audioPath}`);
+        
+        audio.onerror = function() {
+          console.error(`Fichier audio non trouvé: ${audioPath}`);
+          showToast(`🔊 Fichier audio non trouvé: ${number}.mp3`, 'warning');
+        };
+        
+        audio.oncanplaythrough = function() {
+          console.log(`Audio chargé avec succès: ${audioPath}`);
+        };
+        
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log(`Audio joué avec succès pour le nombre ${number}`);
+              showToast(`🔊 Lecture du nombre ${number}`);
+            })
+            .catch(error => {
+              console.error('Erreur de lecture audio:', error);
+              if (error.name === 'NotAllowedError') {
+                showToast('🔊 Cliquez d\'abord quelque part sur la page pour activer l\'audio', 'warning');
+              } else {
+                showToast(`🔊 Erreur de lecture pour le nombre ${number}`, 'warning');
+              }
+            });
+        }
+      } catch (error) {
+        console.error('Erreur lors de la création de l\'audio:', error);
+        showToast(`🔊 Erreur technique pour le nombre ${number}`, 'warning');
+      }
+    }
+
+    function startValidationQuiz() {
+      const category = categories[currentCategory];
+      const progress = calculateCategoryProgress(currentCategory);
+      
+      if (progress.percentage < 100) {
+        showToast('⚠️ Vous devez apprendre TOUS les nombres avant de passer le test !', 'warning');
+        return;
+      }
+      
+      // Animation de la barre avant le lancement
+      const progressFill = document.getElementById('quiz-progress-fill');
+      progressFill.style.transform = 'scale(1.05)';
+      
+      setTimeout(() => {
+        progressFill.style.transform = 'scale(1)';
+        showToast('🚀 Lancement du quiz de validation...', 'success');
+        
+        // Rediriger vers la page de quiz avec la catégorie
+        window.location.href = 'numbers-review_thai.html?category=' + currentCategory;
+        
+        // Alternative: marquer comme complète après 3 secondes pour les tests
+        // setTimeout(() => {
+        //   markCategoryComplete();
+        // }, 3000);
+      }, 200);
+    }
+
+    function markCategoryComplete() {
+      const category = categories[currentCategory];
+      
+      // Marquer tous les nombres de la catégorie comme appris
+      category.numbers.forEach(number => {
+        learningProgress.learnedNumbers.add(number);
+      });
+      
+      // Ajouter la catégorie aux catégories complètes
+      if (!learningProgress.completedCategories.includes(currentCategory)) {
+        learningProgress.completedCategories.push(currentCategory);
+      }
+      
+      learningProgress.categoryProgress[currentCategory] = 100;
+      
+      saveLearningProgress();
+      
+      showToast(`🎉 Catégorie "${category.title}" terminée !`);
+      
+      setTimeout(() => {
+        updateProgressDisplay();
+        renderNumbersGrid();
+      }, 500);
+    }
+
+    // ========== FONCTIONS UTILITAIRES ==========
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease-in';
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 400);
+      }, 4000);
+    }
+
+    // ========== ÉVÉNEMENTS ==========
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Charger les progrès
+      loadLearningProgress();
+      
+      // Mettre à jour l'affichage
+      updateProgressDisplay();
+      
+      // Rendre la grille
+      renderNumbersGrid();
+      
+      // Ajouter les événements aux onglets de catégories
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const categoryKey = this.getAttribute('data-category');
+          switchCategory(categoryKey);
+        });
+      });
+      
+      console.log('Page d\'apprentissage des nombres initialisée');
+    });
+  </script>
+</body>
+</html>

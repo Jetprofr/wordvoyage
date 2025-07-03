@@ -1,0 +1,80 @@
+e développe une application web d'apprentissage du thaï avec l'arborescence suivante :
+votre-projet/
+├── index.html (sélecteur principal)
+├── pages/thai/
+│   ├── index_thai.html (page d'accueil thaï)
+│   ├── alphabet-menu_thai.html
+│   ├── alphabet-learn_thai.html
+│   ├── numbers-menu_thai.html
+│   ├── numbers-learn_thai.html
+│   └── numbers-review_thai.html
+├── audio/
+│   ├── nombres/thai/ (fichiers nommés 0.mp3, 1.mp3, 2.mp3, etc.)
+│   └── alphabet/thai/ (fichiers nommés par phonétique)
+└── images/
+    ├── nombres/thai/
+    └── alphabet/thai/
+RÈGLES IMPORTANTES À RESPECTER :
+
+Hiérarchie linguistique : TOUJOURS mettre le français EN PREMIER, puis le thaï
+
+Format : Français • ไทย
+Exemple : Alphabet Thaï • อักษรไทย
+
+
+Navigation : Les fichiers dans pages/thai/ naviguent entre eux sans préfixe
+
+alphabet-menu_thai.html → alphabet-learn_thai.html
+Retour vers index_thai.html
+
+
+Chemins des ressources depuis pages/thai/ :
+
+Audio : ../../audio/nombres/thai/ ou ../../audio/alphabet/thai/
+Images : ../../images/nombres/thai/ ou ../../images/alphabet/thai/
+
+
+Fichiers audio nombres : Nommés avec chiffres arabes (0.mp3, 1.mp3, 100.mp3, 1000.mp3)
+Design : Style glassmorphism avec gradients, arrière-plans semi-transparents, animations fluides
+LocalStorage : Système de sauvegarde des progrès avec clés :
+
+thaiLearningProgress (nombres)
+thaiAlphabetProgress (alphabet)
+thaiApp_theme (thème sombre/clair)
+
+
+Interface bilingue :
+
+Titres : Français puis thaï séparés par •
+Boutons : Français au-dessus, thaï en dessous (2 lignes)
+
+
+
+FONCTIONNALITÉS EXISTANTES :
+
+✅ Page d'accueil bilingue avec popup de bienvenue
+✅ Module nombres (0-10000) avec 6 catégories progressives
+✅ Module alphabet avec groupes de lettres
+✅ Quiz de validation pour chaque catégorie
+✅ Système de progression avec localStorage
+✅ Audio fonctionnel pour les nombres
+✅ Design responsive et thème jour/nuit
+
+STRUCTURE DES DONNÉES NOMBRES :
+javascriptconst categories = {
+  basics: [0,1,2,3,4,5,6,7,8,9,10],
+  teens: [11,12,13,14,15,16,17,18,19,20],
+  twenties: [21-36],
+  tens: [40,50,60,70,80,100],
+  hundreds: [200,300,400],
+  thousands: [1000,1500,2000,10000]
+};
+À DÉVELOPPER :
+
+Module prononciation
+Module vocabulaire
+Module phrases essentielles
+Quiz global
+Améliorer l'UI/UX
+
+Peux-tu m'aider à [DÉCRIRE ICI VOTRE BESOIN SPÉCIFIQUE] en respectant ces règles et cette architecture ?
