@@ -1,0 +1,11 @@
+
+{
+  "name": "WordVoyage",
+  "short_name": "WordVoyage",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#4CAF50",
+  "orientation": "portrait",
+  "icons": []
+}
