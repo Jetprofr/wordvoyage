@@ -432,7 +432,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#4CAF50">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then(() => console.log('✅ Service Worker enregistré'))
+        .catch(err => console.error('❌ Service Worker erreur', err));
+    }
+  </script>
+
+  <link rel="apple-touch-startup-image" href="./splash_screen.png">
 </head>
 <body>
   <div id="container">
