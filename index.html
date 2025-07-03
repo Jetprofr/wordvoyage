@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apprendre les Langues - Sélecteur</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Arrière-plan animé */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+      animation: backgroundMove 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes backgroundMove {
+      0%, 100% { transform: translateX(0) translateY(0); }
+      33% { transform: translateX(-20px) translateY(-20px); }
+      66% { transform: translateX(20px) translateY(-10px); }
+    }
+
+    #container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Principal */
+    .main-header {
+      text-align: center;
+      margin-bottom: 4rem;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .app-logo {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 2rem;
+      font-size: 3rem;
+      box-shadow: 0 15px 35px rgba(76, 175, 80, 0.3);
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .main-title {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 1rem;
+      background: linear-gradient(45deg, #fff, #f0f8ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .main-subtitle {
+      font-size: 1.3rem;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Section de Sélection */
+    .language-selection {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 3rem;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    .selection-title {
+      text-align: center;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .selection-subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Grille des Langues */
+    .languages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .language-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .language-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(76, 175, 80, 0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .language-card:hover::before {
+      left: 100%;
+    }
+
+    .language-card:hover {
+      transform: translateY(-15px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+      border-color: #4CAF50;
+    }
+
+    .language-card.featured {
+      border-color: #4CAF50;
+      background: linear-gradient(135deg, #f8fff8, #ffffff);
+    }
+
+    .language-card.featured .status-badge {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+    }
+
+    .language-card.coming-soon {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .language-card.coming-soon:hover {
+      transform: none;
+      border-color: transparent;
+    }
+
+    /* Contenu des Cartes */
+    .flag-container {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      position: relative;
+      border: 4px solid #f0f0f0;
+      transition: all 0.3s ease;
+    }
+
+    .language-card:hover .flag-container {
+      transform: scale(1.1);
+      border-color: #4CAF50;
+    }
+
+    .flag-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: all 0.3s ease;
+    }
+
+    .flag-fallback {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: white;
+    }
+
+    .language-name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .language-native {
+      font-size: 1.3rem;
+      color: #666;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .language-description {
+      color: #777;
+      font-size: 1rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .language-stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #4CAF50;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .status-badge {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .language-button {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .language-button:hover {
+      background: linear-gradient(135deg, #45a049, #4CAF50);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+    }
+
+    .language-button.coming-soon {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      color: rgba(255,255,255,0.8);
+      animation: fadeIn 1s ease-out 0.6s both;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      font-weight: 500;
+    }
+
+    .footer-link:hover {
+      color: white;
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #container {
+        padding: 1rem;
+      }
+
+      .main-title {
+        font-size: 2.5rem;
+      }
+
+      .main-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .language-selection {
+        padding: 2rem;
+        border-radius: 20px;
+      }
+
+      .languages-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .language-card {
+        padding: 2rem;
+      }
+
+      .flag-container {
+        width: 100px;
+        height: 100px;
+      }
+
+      .language-name {
+        font-size: 1.5rem;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-title {
+        font-size: 2rem;
+      }
+
+      .language-selection {
+        padding: 1.5rem;
+      }
+
+      .language-card {
+        padding: 1.5rem;
+      }
+
+      .flag-container {
+        width: 80px;
+        height: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header Principal -->
+    <div class="main-header">
+      <div class="app-logo">🌍</div>
+      <h1 class="main-title">Apprendre les Langues</h1>
+      <p class="main-subtitle">
+        Découvrez et maîtrisez de nouvelles langues avec notre plateforme interactive d'apprentissage moderne
+      </p>
+    </div>
+
+    <!-- Section de Sélection des Langues -->
+    <div class="language-selection">
+      <h2 class="selection-title">Choisissez votre langue d'apprentissage</h2>
+      <p class="selection-subtitle">Sélectionnez la langue que vous souhaitez apprendre pour commencer votre parcours</p>
+      
+      <div class="languages-grid">
+        
+        <!-- Thaï -->
+        <div class="language-card featured" onclick="navigateToLanguage('thai')">
+          <div class="flag-container">
+            <img src="images/flags/thai.png" alt="Drapeau Thaïlandais" class="flag-image" onerror="showFlagFallback(this, '🇹🇭')">
+          </div>
+          <div class="status-badge">✨ Disponible</div>
+          <h3 class="language-name">Thaï</h3>
+          <p class="language-native">ภาษาไทย</p>
+          <p class="language-description">
+            Apprenez la langue officielle de la Thaïlande avec nos modules complets sur les nombres, l'alphabet et la prononciation.
+          </p>
+          <div class="language-stats">
+            <div class="stat">
+              <div class="stat-number">60+</div>
+              <div class="stat-label">Nombres</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">44</div>
+              <div class="stat-label">Lettres</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">6</div>
+              <div class="stat-label">Modules</div>
+            </div>
+          </div>
+          <button class="language-button">
+            🚀 Commencer le Thaï
+          </button>
+        </div>
+
+        <!-- Anglais -->
+        <div class="language-card coming-soon" onclick="showComingSoon('Anglais')">
+          <div class="flag-container">
+            <img src="images/flags/english.png" alt="Drapeau Anglais" class="flag-image" onerror="showFlagFallback(this, '🇬🇧')">
+          </div>
+          <div class="status-badge">🚧 Bientôt</div>
+          <h3 class="language-name">Anglais</h3>
+          <p class="language-native">English</p>
+          <p class="language-description">
+            Perfectionnez votre anglais avec des exercices interactifs sur la grammaire, le vocabulaire et la conversation.
+          </p>
+          <div class="language-stats">
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Mots</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Leçons</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Modules</div>
+            </div>
+          </div>
+          <button class="language-button coming-soon">
+            🔒 Bientôt Disponible
+          </button>
+        </div>
+
+        <!-- Français -->
+        <div class="language-card coming-soon" onclick="showComingSoon('Français')">
+          <div class="flag-container">
+            <img src="images/flags/french.png" alt="Drapeau Français" class="flag-image" onerror="showFlagFallback(this, '🇫🇷')">
+          </div>
+          <div class="status-badge">🚧 Bientôt</div>
+          <h3 class="language-name">Français</h3>
+          <p class="language-native">Français</p>
+          <p class="language-description">
+            Maîtrisez la langue de Molière avec des cours structurés sur la conjugaison, l'orthographe et l'expression.
+          </p>
+          <div class="language-stats">
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Mots</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Leçons</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Modules</div>
+            </div>
+          </div>
+          <button class="language-button coming-soon">
+            🔒 Bientôt Disponible
+          </button>
+        </div>
+
+        <!-- Espagnol -->
+        <div class="language-card coming-soon" onclick="showComingSoon('Espagnol')">
+          <div class="flag-container">
+            <img src="images/flags/spanish.png" alt="Drapeau Espagnol" class="flag-image" onerror="showFlagFallback(this, '🇪🇸')">
+          </div>
+          <div class="status-badge">🚧 Bientôt</div>
+          <h3 class="language-name">Espagnol</h3>
+          <p class="language-native">Español</p>
+          <p class="language-description">
+            Découvrez la richesse de la langue espagnole avec des modules sur la culture, la grammaire et la conversation.
+          </p>
+          <div class="language-stats">
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Mots</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Leçons</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">-</div>
+              <div class="stat-label">Modules</div>
+            </div>
+          </div>
+          <button class="language-button coming-soon">
+            🔒 Bientôt Disponible
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-links">
+        <a href="#" class="footer-link" onclick="showModal('À Propos')">À Propos</a>
+        <a href="#" class="footer-link" onclick="showModal('Contact')">Contact</a>
+        <a href="#" class="footer-link" onclick="showModal('Support')">Support</a>
+        <a href="#" class="footer-link" onclick="showModal('Confidentialité')">Confidentialité</a>
+      </div>
+      <p>&copy; 2024 Apprendre les Langues - Plateforme d'apprentissage interactive</p>
+    </div>
+  </div>
+
+  <script>
+    // Navigation vers une langue spécifique
+    function navigateToLanguage(language) {
+      console.log(`Navigation vers la langue: ${language}`);
+      
+      // Animation de transition
+      document.body.style.opacity = '0.8';
+      document.body.style.transform = 'scale(0.98)';
+      
+      setTimeout(() => {
+        window.location.href = `pages/${language}/index_${language}.html`;
+      }, 300);
+    }
+
+    // Afficher message pour langues non disponibles
+    function showComingSoon(language) {
+      showModal(`${language} - Bientôt Disponible`, `
+        La langue ${language} sera bientôt disponible sur notre plateforme ! 
+        <br><br>
+        En attendant, vous pouvez découvrir notre module Thaï complet ou nous contacter pour être notifié de la sortie.
+        <br><br>
+        <strong>Date de sortie prévue :</strong> À déterminer
+      `);
+    }
+
+    // Gestion des erreurs d'images de drapeaux
+    function showFlagFallback(img, emoji) {
+      const container = img.parentElement;
+      container.innerHTML = `<div class="flag-fallback">${emoji}</div>`;
+    }
+
+    // Système de modal générique
+    function showModal(title, content = '') {
+      // Créer la modal
+      const modal = document.createElement('div');
+      modal.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.8);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 2000;
+          backdrop-filter: blur(5px);
+        ">
+          <div style="
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.4s ease-out;
+          ">
+            <h3 style="color: #4CAF50; font-size: 1.8rem; margin-bottom: 1rem;">${title}</h3>
+            ${content ? `<div style="color: #666; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6;">${content}</div>` : ''}
+            <button onclick="this.closest('div').remove()" style="
+              background: linear-gradient(135deg, #4CAF50, #45a049);
+              border: none;
+              color: white;
+              padding: 1rem 2rem;
+              border-radius: 25px;
+              cursor: pointer;
+              font-weight: 600;
+              font-size: 1rem;
+              transition: all 0.3s ease;
+            " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+              Fermer
+            </button>
+          </div>
+        </div>
+      `;
+      
+      // Ajouter les styles d'animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes modalSlideIn {
+          from {
+            transform: translateY(-30px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(modal);
+      
+      // Fermer en cliquant en dehors
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.remove();
+        }
+      });
+    }
+
+    // Afficher les modals par défaut pour les liens footer
+    function showModal(type) {
+      const contents = {
+        'À Propos': `
+          <strong>Apprendre les Langues</strong> est une plateforme moderne d'apprentissage linguistique.
+          <br><br>
+          Notre mission est de rendre l'apprentissage des langues accessible, interactif et amusant pour tous.
+        `,
+        'Contact': `
+          <strong>Contactez-nous :</strong>
+          <br><br>
+          📧 Email : contact@apprendre-langues.com<br>
+          📱 Téléphone : +33 1 23 45 67 89<br>
+          🌐 Site web : www.apprendre-langues.com
+        `,
+        'Support': `
+          <strong>Besoin d'aide ?</strong>
+          <br><br>
+          Consultez notre FAQ ou contactez notre équipe de support technique.
+          <br><br>
+          Nous sommes là pour vous aider !
+        `,
+        'Confidentialité': `
+          <strong>Respect de votre vie privée</strong>
+          <br><br>
+          Vos données personnelles sont protégées et ne sont jamais partagées avec des tiers.
+          <br><br>
+          Nous utilisons uniquement localStorage pour sauvegarder votre progression.
+        `
+      };
+      
+      showModal(type, contents[type] || 'Contenu à venir...');
+    }
+
+    // Animation des cartes au chargement
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        document.querySelectorAll('.language-card').forEach((card, index) => {
+          card.style.animationDelay = (index * 0.2) + 's';
+          card.classList.add('fade-in-up');
+        });
+      }, 500);
+    });
+  </script>
+</body>
+</html>
