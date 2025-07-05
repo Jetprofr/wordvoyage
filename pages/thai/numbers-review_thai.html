@@ -721,7 +721,7 @@
       const audio = document.getElementById('audio');
       
       // Chemin audio adapté à la nouvelle arborescence
-      audio.src = `../../audio/nombres/thai/${numberData.phonetic}.mp3`;
+      audio.src = `audio/nombres/thai/${numberData.phonetic}.mp3`;
       
       audio.onerror = function() {
         console.error(`Fichier audio non trouvé: ${audio.src}`);
