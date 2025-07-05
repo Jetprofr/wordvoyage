@@ -722,14 +722,15 @@
       
       // Chemin audio adapté à la nouvelle arborescence
       const basePath = location.origin + '/wordvoyage';
-      audio.src = basePath + `//audio/nombres/thai/${numberData.phonetic}.mp3`;
+      audio.src = basePath + `../../audio/nombres/thai/${numberData.phonetic}.mp3`;
       
       audio.onerror = function() {
         console.error(`Fichier audio non trouvé: ${audio.src}`);
         showToast('🔊 Fichier audio non trouvé', 'warning');
       };
       
-      const playPromise = audio.play();
+      const playPromise = alert('Lecture audio : ' + audio.src);
+      audio.play();
       
       if (playPromise !== undefined) {
         playPromise
