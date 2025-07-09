@@ -725,7 +725,25 @@
         console.error(`Fichier audio non trouvé: ${audio.src}`);
         showToast('🔊 Fichier audio non trouvé', 'warning');
       };
- 
+      
+   <!--  popup avec le nom du son
+		const playPromise = alert('Lecture audio : ' + audio.src);
+      audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log(`Audio joué: ${numberData.arabic}`);
+          })
+          .catch(error => {
+            console.error('Erreur de lecture audio:', error);
+            if (error.name === 'NotAllowedError') {
+              showToast('🔊 Cliquez d\'abord pour activer l\'audio', 'warning');
+            }
+          });
+      }
+    }
+-->
     function showToast(message, type = 'info') {
       const toast = document.createElement('div');
       toast.style.cssText = `
