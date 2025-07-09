@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Réviser les Nombres Thaï</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    #container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Header */
+    #header {
+      text-align: center;
+      margin-bottom: 3rem;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    #header h1 {
+      font-size: 3rem;
+      margin: 0;
+      background: linear-gradient(135deg, #e91e63, #9c27b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    #header p {
+      font-size: 1.2rem;
+      color: #666;
+      margin: 0.5rem 0 0;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 2rem;
+      top: 2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Game Container */
+    #game {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    #game > p:first-child {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 2rem;
+    }
+
+    /* Level and Stats */
+    #niveau {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #e91e63;
+      margin-bottom: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+      border-radius: 15px;
+      display: inline-block;
+    }
+
+    /* Progress Bar */
+    .bar-container {
+      background: #f0f0f0;
+      border-radius: 25px;
+      height: 20px;
+      margin: 2rem auto;
+      max-width: 400px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      border-radius: 25px;
+      transition: width 0.5s ease;
+      width: 0%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: progressShine 2s infinite;
+    }
+
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Stats */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 1rem 1.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      min-width: 150px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #e91e63;
+    }
+
+    /* Audio Button */
+    .audio-controls {
+      margin: 2rem 0;
+    }
+
+    .play-audio-btn {
+      background: linear-gradient(135deg, #2196F3, #1976D2);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+    }
+
+    .play-audio-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+    }
+
+    .play-audio-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Choices Grid */
+    #choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .choice-btn {
+      background: rgba(255, 255, 255, 0.9);
+      border: 3px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 2rem 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(5px);
+    }
+
+    .choice-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(233, 30, 99, 0.1), transparent);
+      transition: left 0.4s;
+    }
+
+    .choice-btn:hover::before {
+      left: 100%;
+    }
+
+    .choice-btn:hover {
+      transform: translateY(-5px);
+      border-color: #e91e63;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .choice-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #e91e63;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .choice-thai {
+      font-size: 1.5rem;
+      color: #333;
+      font-family: 'Times New Roman', serif;
+      margin-bottom: 0.5rem;
+    }
+
+    .choice-phonetic {
+      font-size: 1rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    /* Feedback */
+    #feedback {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .feedback-correct {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+
+    .feedback-incorrect {
+      background: linear-gradient(135deg, #f44336, #d32f2f);
+      color: white;
+      box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+    }
+
+    .feedback-complete {
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      color: white;
+      box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+    }
+
+    /* Loading State */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #e91e63;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #container {
+        padding: 1rem;
+      }
+
+      #header h1 {
+        font-size: 2.5rem;
+      }
+
+      #game {
+        padding: 2rem;
+      }
+
+      .back-btn {
+        position: static;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      #header {
+        position: relative;
+        padding-top: 1rem;
+      }
+
+      .stats {
+        gap: 1rem;
+      }
+
+      .stat-item {
+        min-width: 120px;
+        padding: 0.8rem 1rem;
+      }
+
+      #choices {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .choice-btn {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    /* Success/Error Animations */
+    @keyframes successBounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes errorShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .success-animation {
+      animation: successBounce 0.6s ease;
+    }
+
+    .error-animation {
+      animation: errorShake 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <!-- Header -->
+    <div id="header">
+      <button onclick="navigateToMenu()" class="back-btn">← Menu Nombres</button>
+      <h1>🎯 Révision des Nombres</h1>
+      <p>Testez vos connaissances !</p>
+    </div>
+
+    <!-- Interface de jeu -->
+    <div id="game">
+      <p>Écoutez et choisissez la bonne réponse :</p>
+      
+      <div id="niveau">Niveau : Chargement...</div>
+      
+      <div class="bar-container">
+        <div id="bar" class="bar-fill"></div>
+      </div>
+      
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-label">Séries réussies</div>
+          <div class="stat-value"><span id="success-streak">0</span> / 3</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Essais série actuelle</div>
+          <div class="stat-value" id="attempt-count">0</div>
+        </div>
+      </div>
+      
+      <div class="audio-controls">
+        <audio id="audio"></audio>
+        <button onclick="playAudio()" class="play-audio-btn">🔊 Rejouer le son</button>
+      </div>
+      
+      <div id="choices"></div>
+      <div id="feedback"></div>
+    </div>
+  </div>
+
+  <script>
+    // Données des nombres thaï
+    const thaiNumbers = {
+      0: { thai: "ศูนย์", phonetic: "suun", arabic: "0"},
+      1: { thai: "หนึ่ง", phonetic: "neung", arabic: "1" },
+      2: { thai: "สอง", phonetic: "song", arabic: "2" },
+      3: { thai: "สาม", phonetic: "saam", arabic: "3" },
+      4: { thai: "สี่", phonetic: "sii", arabic: "4" },
+      5: { thai: "ห้า", phonetic: "haa", arabic: "5" },
+      6: { thai: "หก", phonetic: "hok", arabic: "6" },
+      7: { thai: "เจ็ด", phonetic: "jet", arabic: "7" },
+      8: { thai: "แปด", phonetic: "paet", arabic: "8" },
+      9: { thai: "เก้า", phonetic: "gao", arabic: "9" },
+      10: { thai: "สิบ", phonetic: "sip", arabic: "10" },
+      11: { thai: "สิบเอ็ด", phonetic: "sip-et", arabic: "11" },
+      12: { thai: "สิบสอง", phonetic: "sip-song", arabic: "12" },
+      13: { thai: "สิบสาม", phonetic: "sip-saam", arabic: "13" },
+      14: { thai: "สิบสี่", phonetic: "sip-sii", arabic: "14" },
+      15: { thai: "สิบห้า", phonetic: "sip-haa", arabic: "15" },
+      16: { thai: "สิบหก", phonetic: "sip-hok", arabic: "16" },
+      17: { thai: "สิบเจ็ด", phonetic: "sip-jet", arabic: "17" },
+      18: { thai: "สิบแปด", phonetic: "sip-paet", arabic: "18" },
+      19: { thai: "สิบเก้า", phonetic: "sip-gao", arabic: "19" },
+      20: { thai: "ยี่สิบ", phonetic: "yii-sip", arabic: "20" },
+      21: { thai: "ยี่สิบเอ็ด", phonetic: "yii-sip-et", arabic: "21" },
+      22: { thai: "ยี่สิบสอง", phonetic: "yii-sip-song", arabic: "22" },
+      23: { thai: "ยี่สิบสาม", phonetic: "yii-sip-saam", arabic: "23" },
+      24: { thai: "ยี่สิบสี่", phonetic: "yii-sip-sii", arabic: "24" },
+      25: { thai: "ยี่สิบห้า", phonetic: "yii-sip-haa", arabic: "25" },
+      26: { thai: "ยี่สิบหก", phonetic: "yii-sip-hok", arabic: "26" },
+      27: { thai: "ยี่สิบเจ็ด", phonetic: "yii-sip-jet", arabic: "27" },
+      28: { thai: "ยี่สิบแปด", phonetic: "yii-sip-paet", arabic: "28" },
+      29: { thai: "ยี่สิบเก้า", phonetic: "yii-sip-gao", arabic: "29" },
+      30: { thai: "สามสิบ", phonetic: "saam-sip", arabic: "30" },
+      40: { thai: "สี่สิบ", phonetic: "sii-sip", arabic: "40" },
+      50: { thai: "ห้าสิบ", phonetic: "haa-sip", arabic: "50" },
+      60: { thai: "หกสิบ", phonetic: "hok-sip", arabic: "60" },
+      70: { thai: "เจ็ดสิบ", phonetic: "jet-sip", arabic: "70" },
+      80: { thai: "แปดสิบ", phonetic: "paet-sip", arabic: "80" },
+      100: { thai: "หนึ่งร้อย", phonetic: "neung-roi", arabic: "100" },
+      200: { thai: "สองร้อย", phonetic: "song-roi", arabic: "200" },
+      300: { thai: "สามร้อย", phonetic: "saam-roi", arabic: "300" },
+      400: { thai: "สี่ร้อย", phonetic: "sii-roi", arabic: "400" },
+      1000: { thai: "หนึ่งพัน", phonetic: "neung-pan", arabic: "1000" },
+      1500: { thai: "พันห้า", phonetic: "pan-haa", arabic: "1500" },
+      2000: { thai: "สองพัน", phonetic: "song-pan", arabic: "2000" },
+      10000: { thai: "หนึ่งหมื่น", phonetic: "neung-muen", arabic: "10000" }
+    };
+
+   // Categories mapping (basé sur les mêmes catégories que numbers-learn)
+    const categories = {
+      basics: [0,1,2,3,4,5,6,7,8,9,10],
+      teens: [11,12,13,14,15,16,17,18,19,20],
+      twenties: [21,22,23,24,25,26,27,28,29,30],
+      tens: [40,50,60,70,80,100],
+      hundreds: [200,300,400],
+      thousands: [1000,1500,2000,10000]
+    };
+
+    // Variables du jeu
+    let currentCategory = 'basics';
+    let currentNumbers = [];
+    let currentNumber = null;
+    let choices = [];
+    let successStreak = 0;
+    let attemptCount = 0;
+    let gameCompleted = false;
+
+    // ========== FONCTIONS DE NAVIGATION ==========
+
+    function navigateToMenu() {
+      window.location.href = 'numbers-menu_thai.html';
+    }
+
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // ========== FONCTIONS DU JEU ==========
+
+    function initializeGame() {
+      // Récupérer la catégorie depuis l'URL
+      const categoryParam = getUrlParameter('category');
+      if (categoryParam && categories[categoryParam]) {
+        currentCategory = categoryParam;
+      }
+      
+      currentNumbers = categories[currentCategory];
+      document.getElementById('niveau').textContent = `Niveau : ${getCategoryTitle(currentCategory)}`;
+      
+      console.log('Jeu initialisé pour la catégorie:', currentCategory);
+      console.log('Nombres disponibles:', currentNumbers);
+      
+      startNewQuestion();
+    }
+
+    function getCategoryTitle(category) {
+      const titles = {
+        basics: "0 à 10",
+        teens: "11 à 20",
+        twenties: "Vingtaines (21-30)",
+        tens: "Dizaines (40-100)",
+        hundreds: "Centaines (200-400)",
+        thousands: "Milliers (1000+)"
+      };
+      return titles[category] || "Inconnu";
+    }
+
+    function startNewQuestion() {
+      if (gameCompleted) return;
+      
+      // Choisir un nombre aléatoire
+      currentNumber = currentNumbers[Math.floor(Math.random() * currentNumbers.length)];
+      
+      // Générer les choix (le bon + 3 mauvais)
+      choices = [currentNumber];
+      
+      // Ajouter 3 choix incorrects
+      while (choices.length < 4) {
+        const randomNumber = currentNumbers[Math.floor(Math.random() * currentNumbers.length)];
+        if (!choices.includes(randomNumber)) {
+          choices.push(randomNumber);
+        }
+      }
+      
+      // Mélanger les choix
+      choices = choices.sort(() => Math.random() - 0.5);
+      
+      // Afficher les choix
+      displayChoices();
+      
+      // Jouer le son automatiquement
+      playAudio();
+      
+      // Effacer le feedback précédent
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('feedback').className = '';
+    }
+
+    function displayChoices() {
+      const choicesContainer = document.getElementById('choices');
+      choicesContainer.innerHTML = '';
+      
+      choices.forEach((number, index) => {
+        const choiceBtn = document.createElement('button');
+        choiceBtn.className = 'choice-btn fade-in-up';
+        choiceBtn.style.animationDelay = (index * 0.1) + 's';
+        choiceBtn.onclick = () => selectChoice(number);
+        
+        const numberData = thaiNumbers[number];
+        
+        choiceBtn.innerHTML = `
+          <span class="choice-number">${number}</span>
+          <span class="choice-thai">${numberData.thai}----</span>
+         <!-- <span class="choice-phonetic">/${numberData.arabic}/</span> -->
+        `;
+        
+        choicesContainer.appendChild(choiceBtn);
+      });
+    }
+
+    function selectChoice(selectedNumber) {
+      attemptCount++;
+      document.getElementById('attempt-count').textContent = attemptCount;
+      
+      const feedback = document.getElementById('feedback');
+      
+      if (selectedNumber === currentNumber) {
+        // Bonne réponse
+        feedback.innerHTML = '🎉 Correct ! Excellente réponse !';
+        feedback.className = 'feedback-correct success-animation';
+        
+        successStreak++;
+        document.getElementById('success-streak').textContent = successStreak;
+        
+        // Mettre à jour la barre de progression
+        updateProgressBar();
+        
+        // Vérifier si le jeu est terminé
+        if (successStreak >= 10) {
+          setTimeout(() => {
+            completeGame();
+          }, 2000);
+        } else {
+          // Nouvelle question après 2 secondes
+          setTimeout(() => {
+            startNewQuestion();
+          }, 2000);
+        }
+        
+      } else {
+        // Mauvaise réponse
+        const correctData = thaiNumbers[currentNumber];
+        feedback.innerHTML = `❌ Incorrect ! La bonne réponse était : <strong>${currentNumber}</strong> (${correctData.thai} - /${correctData.arabic}/)`;
+        feedback.className = 'feedback-incorrect error-animation';
+        
+        // Réinitialiser la série
+        successStreak = 0;
+        attemptCount = 0;
+        document.getElementById('success-streak').textContent = successStreak;
+        document.getElementById('attempt-count').textContent = attemptCount;
+        
+        // Rejouer le son de la bonne réponse
+        setTimeout(() => {
+          playAudio();
+        }, 1000);
+        
+        // Nouvelle question après 3 secondes
+        setTimeout(() => {
+          startNewQuestion();
+        }, 3000);
+      }
+    }
+
+    function updateProgressBar() {
+      const progress = (successStreak / 10) * 100;
+      document.getElementById('bar').style.width = progress + '%';
+    }
+
+    function completeGame() {
+      gameCompleted = true;
+      
+      const feedback = document.getElementById('feedback');
+      feedback.innerHTML = '🏆 Félicitations ! Vous avez terminé cette catégorie ! 🎯';
+      feedback.className = 'feedback-complete pulse';
+      
+      // Masquer les choix
+      document.getElementById('choices').innerHTML = '';
+      
+      // Ajouter un bouton pour revenir au menu
+      setTimeout(() => {
+        const returnBtn = document.createElement('button');
+        returnBtn.className = 'play-audio-btn';
+        returnBtn.style.marginTop = '2rem';
+        returnBtn.textContent = '🏠 Retour au menu';
+        returnBtn.onclick = navigateToMenu;
+        
+        feedback.appendChild(document.createElement('br'));
+        feedback.appendChild(returnBtn);
+      }, 2000);
+      
+      // Sauvegarder le succès (optionnel)
+      markCategoryCompleted();
+    }
+
+    function markCategoryCompleted() {
+      try {
+        const progress = JSON.parse(localStorage.getItem('thaiLearningProgress')) || {};
+        if (!progress.completedCategories) {
+          progress.completedCategories = [];
+        }
+        
+        if (!progress.completedCategories.includes(currentCategory)) {
+          progress.completedCategories.push(currentCategory);
+          localStorage.setItem('thaiLearningProgress', JSON.stringify(progress));
+          console.log('Catégorie marquée comme complétée:', currentCategory);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde:', error);
+      }
+    }
+
+    function playAudio() {
+      if (!currentNumber) return;
+      
+      const numberData = thaiNumbers[currentNumber];
+      const audio = document.getElementById('audio');
+      
+      // Chemin audio adapté à la nouvelle arborescence
+      const basePath = location.origin + '/wordvoyage';
+      audio.src =  `../../audio/nombres/thai/${numberData.arabic}.mp3`;
+      
+      audio.onerror = function() {
+        console.error(`Fichier audio non trouvé: ${audio.src}`);
+        showToast('🔊 Fichier audio non trouvé', 'warning');
+      };
+      
+      const playPromise = alert('Lecture audio : ' + audio.src);
+      audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log(`Audio joué: ${numberData.arabic}`);
+          })
+          .catch(error => {
+            console.error('Erreur de lecture audio:', error);
+            if (error.name === 'NotAllowedError') {
+              showToast('🔊 Cliquez d\'abord pour activer l\'audio', 'warning');
+            }
+          });
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'warning' ? 'linear-gradient(135deg, #ff9800, #f57c00)' : 'linear-gradient(135deg, #2196F3, #1976D2)'};
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        z-index: 3000;
+        animation: slideInRight 0.4s ease-out;
+        font-weight: 600;
+        max-width: 300px;
+      `;
+      toast.textContent = message;
+      
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.4s ease-in';
+        setTimeout(() => toast.remove(), 400);
+      }, 3000);
+    }
+
+    // ========== INITIALISATION ==========
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Initialisation de la page de révision...');
+      
+      // Petite animation de chargement
+      document.getElementById('game').innerHTML = `
+        <div class="loading">
+          <div class="loading-spinner"></div>
+          <span>Préparation du quiz...</span>
+        </div>
+      `;
+      
+      setTimeout(() => {
+        // Restaurer l'interface du jeu
+        document.getElementById('game').innerHTML = `
+          <p>Écoutez et choisissez la bonne réponse :</p>
+          
+          <div id="niveau">Niveau : Chargement...</div>
+          
+          <div class="bar-container">
+            <div id="bar" class="bar-fill"></div>
+          </div>
+          
+          <div class="stats">
+            <div class="stat-item">
+              <div class="stat-label">Séries réussies</div>
+              <div class="stat-value"><span id="success-streak">0</span> / 10</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Essais série actuelle</div>
+              <div class="stat-value" id="attempt-count">0</div>
+            </div>
+          </div>
+          
+          <div class="audio-controls">
+            <audio id="audio"></audio>
+            <button onclick="playAudio()" class="play-audio-btn">🔊 Rejouer le son</button>
+          </div>
+          
+          <div id="choices"></div>
+          <div id="feedback"></div>
+        `;
+        
+        // Initialiser le jeu
+        initializeGame();
+      }, 1500);
+      
+      console.log('Page de révision initialisée');
+    });
+
+    // Animation styles additionnels
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
