@@ -602,7 +602,7 @@
         
         choiceBtn.innerHTML = `
           <span class="choice-number">${number}</span>
-          <span class="choice-thai">${numberData.thai}----</span>
+          <span class="choice-thai">${numberData.thai}</span>
          <!-- <span class="choice-phonetic">/${numberData.arabic}/</span> -->
         `;
         
@@ -726,7 +726,8 @@
         showToast('🔊 Fichier audio non trouvé', 'warning');
       };
       
-      const playPromise = alert('Lecture audio : ' + audio.src);
+   <!--  popup avec le nom du son
+		const playPromise = alert('Lecture audio : ' + audio.src);
       audio.play();
       
       if (playPromise !== undefined) {
@@ -742,7 +743,7 @@
           });
       }
     }
-
+-->
     function showToast(message, type = 'info') {
       const toast = document.createElement('div');
       toast.style.cssText = `
