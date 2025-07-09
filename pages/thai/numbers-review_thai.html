@@ -642,7 +642,7 @@
       } else {
         // Mauvaise réponse
         const correctData = thaiNumbers[currentNumber];
-        feedback.innerHTML = `❌ Incorrect ! La bonne réponse était : <strong>${currentNumber}</strong> (${correctData.thai} - /${correctData.arabic}/)`;
+        feedback.innerHTML = `❌ Incorrect ! La bonne réponse était : <strong>${currentNumber}</strong> (${correctData.thai})`;
         feedback.className = 'feedback-incorrect error-animation';
         
         // Réinitialiser la série
