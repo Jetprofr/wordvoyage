@@ -547,8 +547,8 @@
 
     function getCategoryTitle(category) {
       const titles = {
-        basics: "Bases (0-10)",
-        teens: "Adolescents (11-20)",
+        basics: "0 à 10",
+        teens: "11 à 20",
         twenties: "Vingtaines (21-30)",
         tens: "Dizaines (40-100)",
         hundreds: "Centaines (200-400)",
@@ -577,9 +577,6 @@
       // Mélanger les choix
       choices = choices.sort(() => Math.random() - 0.5);
       
-      console.log('Nouvelle question:', currentNumber);
-      console.log('Choix:', choices);
-      
       // Afficher les choix
       displayChoices();
       
@@ -605,8 +602,8 @@
         
         choiceBtn.innerHTML = `
           <span class="choice-number">${number}</span>
-          <span class="choice-thai">${numberData.thai}</span>
-          <span class="choice-phonetic">/${numberData.arabic}/</span>
+          <span class="choice-thai">${numberData.thai}----</span>
+         <!-- <span class="choice-phonetic">/${numberData.arabic}/</span> -->
         `;
         
         choicesContainer.appendChild(choiceBtn);
