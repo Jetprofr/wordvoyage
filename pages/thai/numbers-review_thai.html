@@ -726,8 +726,8 @@
         showToast('🔊 Fichier audio non trouvé', 'warning');
       };
       
-   <!--  popup avec le nom du son
-		const playPromise = alert('Lecture audio : ' + audio.src);
+   popup avec le nom du son
+		const playPromise = audio.src;
       audio.play();
       
       if (playPromise !== undefined) {
@@ -743,7 +743,7 @@
           });
       }
     }
--->
+
     function showToast(message, type = 'info') {
       const toast = document.createElement('div');
       toast.style.cssText = `
